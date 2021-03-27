@@ -903,7 +903,7 @@ Now within the **templates** folder, create an HTML file named **home.html**:
 
 **templates/home.html**
 
-```
+```html
 <!DOCTYPE html>
 <html>
   <head>
@@ -927,7 +927,7 @@ In the example above we are mixing raw HTML with some special tags `{% for ... i
 
 ==Open the **settings.py** inside the **myproject** directory and search for the `TEMPLATES` variable and set the `DIRS` key to `os.path.join(BASE_DIR, 'templates')`:==
 
-```
+```python
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -951,7 +951,7 @@ Basically what this line is doing is finding the full path of your project direc
 
 We can debug this using the Python shell:
 
-```
+```python
 python manage.py shell
 from django.conf import settings
 
@@ -970,7 +970,7 @@ Now we can update our **home** view:
 
 **boards/views.py**
 
-```
+```python
 from django.shortcuts import render
 from .models import Board
 
@@ -987,7 +987,7 @@ We can improve the HTML template to use a table instead:
 
 **templates/home.html**
 
-```
+```html
 <!DOCTYPE html>
 <html>
   <head>
@@ -1036,8 +1036,8 @@ Let’s write our first test. For now, we will be working in the **tests.py** fi
 
 **boards/tests.py**
 
-```
-from django.core.urlresolvers import reverse
+```python
+from django.urls import reverse
 from django.test import TestCase
 
 class HomeTests(TestCase):
@@ -1075,7 +1075,7 @@ Here’s how we do it:
 
 **boards/tests.py**
 
-```
+```python
 from django.core.urlresolvers import reverse
 from django.urls import resolve
 from django.test import TestCase
@@ -1092,7 +1092,7 @@ class HomeTests(TestCase):
         self.assertEquals(view.func, home)
 ```
 
-In the second test, we are making use of the `resolve` function. Django uses it to match a requested URL with a list of URLs listed in the **urls.py** module. This test will make sure the URL `/`, which is the root URL, is returning the home view.
+==In the second test, we are making use of the `resolve` function. Django uses it to match a requested URL with a list of URLs listed in the **urls.py** module==. This test will make sure the URL `/`, which is the root URL, is returning the home view.
 
 Test it again:
 
@@ -1149,7 +1149,7 @@ Verbosity determines the amount of notification and debug information that will 
 
 ##### Static Files Setup
 
-Static files are the CSS, JavaScripts, Fonts, Images, or any other resources we may use to compose the user interface.
+==Static files are the CSS, JavaScripts, Fonts, Images, or any other resources we may use to compose the user interface==.
 
 As it is, Django doesn’t serve those files. Except during the development process, so to make our lives easier. But Django provides some features to help us manage the static files. Those features are available in the **django.contrib.staticfiles** application already listed in the `INSTALLED_APPS` configuration.
 
@@ -1190,9 +1190,9 @@ myproject/
  +-- venv/
 ```
 
-The next step is to instruct Django where to find the static files. Open the **settings.py**, scroll to the bottom of the file and just after the `STATIC_URL`, add the following:
+==The next step is to instruct Django where to find the static files. Open the **settings.py**, scroll to the bottom of the file and just after the `STATIC_URL`, add the following==:
 
-```
+```python
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
@@ -1206,7 +1206,7 @@ Now we have to load the static files (the Bootstrap CSS file) in our template:
 
 **templates/home.html**
 
-```
+```html
 {% load static %}<!DOCTYPE html>
 <html>
   <head>
@@ -1220,13 +1220,13 @@ Now we have to load the static files (the Bootstrap CSS file) in our template:
 </html>
 ```
 
-First we load the Static Files App template tags by using the `{% load static %}` in the beginning of the template.
+==First we load the Static Files App template tags by using the `{% load static %}` in the beginning of the template==.
 
-The template tag `{% static %}` is used to compose the URL where the resource lives. In this case, the `{% static 'css/bootstrap.min.css' %}` will return **/static/css/bootstrap.min.css**, which is equivalent to **http://127.0.0.1:8000/static/css/bootstrap.min.css**.
+==The template tag `{% static %}` is used to compose the URL where the resource lives.== In this case, the `{% static 'css/bootstrap.min.css' %}` will return **/static/css/bootstrap.min.css**, which is equivalent to **http://127.0.0.1:8000/static/css/bootstrap.min.css**.
 
 The `{% static %}` template tag uses the `STATIC_URL` configuration in the **settings.py** to compose the final URL. For example, if you hosted your static files in a subdomain like **https://static.example.com/**, we would set the `STATIC_URL=https://static.example.com/` then the `{% static 'css/bootstrap.min.css' %}` would return **https://static.example.com/css/bootstrap.min.css**.
 
-If none of this makes sense for you at the moment, don’t worry. Just remember to use the `{% static %}` whenever you need to refer to a CSS, JavaScript or image file. Later on, when we start working with Deployment, we will discuss more it. For now, we are all set up.
+If none of this makes sense for you at the moment, don’t worry. ==Just remember to use the `{% static %}` whenever you need to refer to a CSS, JavaScript or image file==. Later on, when we start working with Deployment, we will discuss more it. For now, we are all set up.
 
 Refreshing the page **127.0.0.1:8000** we can see it worked:
 
@@ -1234,7 +1234,7 @@ Refreshing the page **127.0.0.1:8000** we can see it worked:
 
 Now we can edit the template so to take advantage of the Bootstrap CSS:
 
-```
+```css
 {% load static %}<!DOCTYPE html>
 <html>
   <head>
@@ -1293,7 +1293,7 @@ A good use case of the Django Admin is for example in a blog; it can be used by 
 
 For now, we are going to configure the Django Admin to maintain our application’s boards.
 
-Let’s start by creating an administrator account:
+==Let’s start by creating an administrator account==:
 
 ```
 python manage.py createsuperuser
@@ -1319,11 +1319,11 @@ Enter the **username** and **password** to log into the administration interface
 
 It already comes with some features configured. Here we can add **Users** and **Groups** to manage permissions. We will explore more of those concepts later on.
 
-To add the **Board** model is very straightforward. Open the **admin.py** file in the **boards** directory, and add the following code:
+==To add the **Board** model is very straightforward. Open the **admin.py** file in the **boards** directory, and add the following code==:
 
 **boards/admin.py**
 
-```
+```python
 from django.contrib import admin
 from .models import Board
 
