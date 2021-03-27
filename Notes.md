@@ -539,7 +539,7 @@ The models are basically a representation of your application’s database layou
 
 We will do all the work inside the **boards/models.py** file. Here is how we represent our class diagram (see [Figure 4](https://simpleisbetterthancomplex.com/series/2017/09/11/a-complete-beginners-guide-to-django-part-2.html#figure-4)). in a Django application:
 
-```
+```python
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -577,13 +577,13 @@ In the `Board` model definition, more specifically in the `name` field, we are a
 
 In the `Post` model, the `created_at` field has an optional parameter, the `auto_now_add` set to `True`. This will instruct Django to set the current date and time when a `Post` object is created.
 
-One way to create a relationship between the models is by using the `ForeignKey` field. It will create a link between the models and create a proper relationship at the database level. The `ForeignKey` field expects a positional parameter with the reference to the model it will relate to.
+==One way to create a relationship between the models is by using the `ForeignKey` field. It will create a link between the models and create a proper relationship at the database level. The `ForeignKey` field expects a positional parameter with the reference to the model it will relate to==.
 
 For example, in the `Topic` model, the `board` field is a `ForeignKey` to the `Board` model. It is telling Django that a `Topic` instance relates to only one `Board` instance. The `related_name` parameter will be used to create a *reverse relationship* where the `Board` instances will have access a list of `Topic` instances that belong to it.
 
 Django automatically creates this reverse relationship – the `related_name` is optional. But if we don’t set a name for it, Django will generate it with the name: `(class_name)_set`. For example, in the `Board` model, the `Topic` instances would be available under the `topic_set` property. Instead, we simply renamed it to `topics`, to make it feel more natural.
 
-In the `Post` model, the `updated_by` field sets the `related_name='+'`. This instructs Django that we don’t need this reverse relationship, so it will ignore it.
+==In the `Post` model, the `updated_by` field sets the `related_name='+'`. This instructs Django that we don’t need this reverse relationship, so it will ignore it==.
 
 Below you can see the comparison between the class diagram and the source code to generate the models with Django. The green lines represent how we are handling the reverse relationships.
 
@@ -595,9 +595,9 @@ At this point, you may be asking yourself: “what about primary keys/IDs”? If
 
 The next step is to tell Django to create the database so we can start using it.
 
-Open the , activate the virtual environment, go to the folder where the **manage.py** file is, and run the commands below:
+==Open the , activate the virtual environment, go to the folder where the **manage.py** file is, and run the commands below:==
 
-```
+```python
 python manage.py makemigrations
 ```
 
@@ -615,7 +615,7 @@ Migrations for 'boards':
 
 At this point, Django created a file named **0001_initial.py** inside the **boards/migrations** directory. It represents the current state of our application’s models. In the next step, Django will use this file to create the tables and columns.
 
-The migration files are translated into SQL statements. If you are familiar with SQL, you can run the following command to inspect the SQL instructions that will be executed in the database:
+==The migration files are translated into SQL statements. If you are familiar with SQL, you can run the following command to inspect the SQL instructions that will be executed in the database:==
 
 ```
 python manage.py sqlmigrate boards 0001
@@ -623,7 +623,7 @@ python manage.py sqlmigrate boards 0001
 
 If you’re not familiar with SQL, don’t worry. We won’t be working directly with SQL in this tutorial series. All the work will be done using just the Django ORM, which is an abstraction layer that communicates with the database.
 
-The next step now is to *apply* the migration we generated to the database:
+==The next step now is to *apply* the migration we generated to the database:==
 
 ```
 python manage.py migrate
@@ -669,7 +669,7 @@ We are going to use SQLite during the development of our project because it's co
 
 One of the great advantages of developing with Python is the interactive shell. I use it all the time. It’s a quick way to try things out and experiment libraries and APIs.
 
-You can start a Python shell with our project loaded using the **manage.py** utility:
+==You can start a Python shell with our project loaded using the **manage.py** utility:==
 
 ```
 python manage.py shell
@@ -695,7 +695,7 @@ To persist this object in the database, we have to call the `save` method:
 board.save()
 ```
 
-The `save` method is used both to *create* and *update* objects. Here Django created a new object because the **Board** instance had no **id**. After saving it for the first time, Django will set the id automatically:
+==The `save` method is used both to *create* and *update* objects==. Here Django created a new object because the **Board** instance had no **id**. After saving it for the first time, Django will set the id automatically:
 
 ```
 board.id
@@ -711,14 +711,14 @@ board.description
 'This is a board about Django.'
 ```
 
-To update a value we could do:
+==To update a value we could do==:
 
 ```
 board.description = 'Django discussion board.'
 board.save()
 ```
 
-Every Django model comes with a special attribute; we call it a **Model Manager**. You can access it via the Python attribute `objects`. It is used mainly to execute queries in the database. For example, we could use it to directly create a new **Board** object:
+==Every Django model comes with a special attribute; we call it a **Model Manager**. You can access it via the Python attribute `objects`. It is used mainly to execute queries in the database==. For example, we could use it to directly create a new **Board** object:
 
 ```
 board = Board.objects.create(name='Python', description='General discussion about Python.')
@@ -728,7 +728,7 @@ board.name
 'Python'
 ```
 
-So, right now we have two boards. We can use the `objects` to list all existing boards in the database:
+==So, right now we have two boards. We can use the `objects` to list all existing boards in the database:==
 
 ```
 Board.objects.all()
@@ -737,7 +737,7 @@ Board.objects.all()
 
 The result was a **QuerySet**. We will learn more about that later on. Basically, it’s a list of objects from the database. We can see that we have two objects, but we can only read **Board object**. That’s because we haven’t defined the `__str__` method in the **Board** model.
 
-The `__str__` method is a String representation of an object. We can use the board name to represent it.
+==The `__str__` method is a String representation of an object==. We can use the board name to represent it.
 
 First, exit the interactive console:
 
@@ -783,7 +783,7 @@ Django discussion board.
 General discussion about Python.
 ```
 
-Similarly, we can use the model **Manager** to query the database and return a single object. For that we use the `get` method:
+==Similarly, we can use the model **Manager** to query the database and return a single object==. For that we use the `get` method:
 
 ```
 django_board = Board.objects.get(id=1)
@@ -814,7 +814,7 @@ Board.objects.get(name='django')
 boards.models.DoesNotExist: Board matching query does not exist.
 ```
 
-##### Summary of Model’s Operations
+##### ==Summary of Model’s Operations==
 
 Find below a summary of the methods and operations we learned in this section, using the **Board** model as a reference. Uppercase **Board** refers to the class, lowercase **board** refers to an instance (or object) of the **Board** model class:
 
@@ -923,9 +923,9 @@ Now within the **templates** folder, create an HTML file named **home.html**:
 
 In the example above we are mixing raw HTML with some special tags `{% for ... in ... %}` and `{{ variable }}`. They are part of the Django Template Language. The example above shows how to iterate over a list of objects using a `for`. The `{{ board.name }}` renders the name of the board in the HTML template, generating a dynamic HTML document.
 
-Before we can use this HTML page, we have to tell Django where to find our application’s templates.
+==Before we can use this HTML page, we have to tell Django where to find our application’s templates==.
 
-Open the **settings.py** inside the **myproject** directory and search for the `TEMPLATES` variable and set the `DIRS` key to `os.path.join(BASE_DIR, 'templates')`:
+==Open the **settings.py** inside the **myproject** directory and search for the `TEMPLATES` variable and set the `DIRS` key to `os.path.join(BASE_DIR, 'templates')`:==
 
 ```
 TEMPLATES = [
