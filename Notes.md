@@ -1421,7 +1421,7 @@ We will start by editing the **urls.py** inside the **myproject** folder:
 
 **myproject/urls.py**
 
-```
+```python
 from django.conf.urls import url
 from django.contrib import admin
 
@@ -1452,11 +1452,11 @@ It already comes configured, so you don’t need to change anything here.
 
 When Django receives a request, it starts searching for a match in the project’s URLconf. It starts with the first entry of the `urlpatterns` variable, and test the requested URL against each `url` entry.
 
-If Django finds a match, it will pass the request to the **view function**, which is the second parameter of the `url`. The order in the `urlpatterns` matters, because Django will stop searching as soon as it finds a match. Now, if Django doesn’t find a match in the URLconf, it will raise a **404** exception, which is the error code for **Page Not Found**.
+==If Django finds a match, it will pass the request to the **view function**, which is the second parameter of the `url`.== The order in the `urlpatterns` matters, because Django will stop searching as soon as it finds a match. Now, if Django doesn’t find a match in the URLconf, it will raise a **404** exception, which is the error code for **Page Not Found**.
 
-This is the anatomy of the `url` function:
+==This is the anatomy of the `url` function:==
 
-```
+```python
 def url(regex, view, kwargs=None, name=None):
     # ...
 ```
@@ -1472,7 +1472,7 @@ def url(regex, view, kwargs=None, name=None):
 
 Basic URLs are very simple to create. It’s just a matter of matching strings. For example, let’s say we wanted to create an “about” page, it could be defined like this:
 
-```
+```python
 from django.conf.urls import url
 from boards import views
 
@@ -1484,7 +1484,7 @@ urlpatterns = [
 
 We can also create deeper URL structures:
 
-```
+```python
 from django.conf.urls import url
 from boards import views
 
@@ -1501,7 +1501,7 @@ urlpatterns = [
 
 Those are some examples of simple URL routing. For all the examples above, the view function will follow this structure:
 
-```
+```python
 def about(request):
     # do something...
     return render(request, 'about.html')
@@ -1514,11 +1514,11 @@ def about_company(request):
 
 ##### Advanced URLs
 
-A more advanced usage of URL routing is achieved by taking advantage of the regex to match certain types of data and create dynamic URLs.
+A more advanced usage of URL routing is achieved by taking advantage of the regex to match certain types of data and create **dynamic** URLs.
 
 For example, to create a profile page, like many services do like github.com/vitorfs or twitter.com/vitorfs, where “vitorfs” is my username, we can do the following:
 
-```
+```python
 from django.conf.urls import url
 from boards import views
 
@@ -1532,7 +1532,7 @@ This will match all valid usernames for a Django User model.
 
 Now observe that the example above is a very *permissive* URL. That means it will match lots of URL patterns because it is defined in the root of the URL, with no prefix like **/profile/<username>/**. In this case, if we wanted to define a URL named **/about/**, we would have do define it *before* the username URL pattern:
 
-```
+```python
 from django.conf.urls import url
 from boards import views
 
@@ -1555,19 +1555,19 @@ If you want no prefix at all, consider using a list of forbidden names like this
 
 Those collisions are very common. Take GitHub for example; they have this URL to list all the repositories you are currently watching: [github.com/watching](https://github.com/watching). Someone registered a username on GitHub with the name "watching," so this person can't see his profile page. We can see a user with this username exists by trying this URL: [github.com/watching/repositories](https://github.com/watching/repositories) which was supposed to list the user's repositories, like mine for example [github.com/vitorfs/repositories](https://github.com/vitorfs/repositories).
 
-The whole idea of this kind of URL routing is to create dynamic pages where part of the URL will be used as an identifier for a certain resource, that will be used to compose a page. This identifier can be an integer ID or a string for example.
+==The whole idea of this kind of URL routing is to create dynamic pages where part of the URL will be used as an identifier for a certain resource, that will be used to compose a page==. This identifier can be an integer ID or a string for example.
 
 Initially, we will be working with the **Board** ID to create a dynamic page for the **Topics**. Let’s read again the example I gave at the beginning of the **URLs** section:
 
-```
+```python
 url(r'^boards/(?P<pk>\d+)/$', views.board_topics, name='board_topics')
 ```
 
-The regex `\d+` will match an integer of arbitrary size. This integer will be used to retrieve the **Board** from the database. Now observe that we wrote the regex as `(?P<pk>\d+)`, this is telling Django to capture the value into a keyword argument named **pk**.
+==The regex `\d+` will match an integer of arbitrary size.== This integer will be used to retrieve the **Board** from the database. Now observe that we wrote the regex as `(?P<pk>\d+)`, ==this is telling Django to capture the value into a keyword argument named **pk**==.
 
 Here is how we write a view function for it:
 
-```
+```python
 def board_topics(request, pk):
     # do something...
 ```
@@ -1576,20 +1576,20 @@ Because we used the `(?P<pk>\d+)` regex, the keyword argument in the `board_topi
 
 If we wanted to use any name, we could do it like this:
 
-```
+```python
 url(r'^boards/(\d+)/$', views.board_topics, name='board_topics')
 ```
 
 Then the view function could be defined like this:
 
-```
+```python
 def board_topics(request, board_id):
     # do something...
 ```
 
 Or like this:
 
-```
+```python
 def board_topics(request, id):
     # do something...
 ```
@@ -1612,7 +1612,7 @@ First, edit the **urls.py** adding our new URL route:
 
 **myproject/urls.py**
 
-```
+```python
 from django.conf.urls import url
 from django.contrib import admin
 
@@ -1629,7 +1629,7 @@ Now let’s create the view function `board_topics`:
 
 **boards/views.py**
 
-```
+```python
 from django.shortcuts import render
 from .models import Board
 
@@ -1645,7 +1645,7 @@ In the **templates** folder, create a new template named **topics.html**:
 
 **templates/topics.html**
 
-```
+```html
 {% load static %}<!DOCTYPE html>
 <html>
   <head>
@@ -1674,7 +1674,7 @@ Time to write some tests! Edit the **tests.py** file and add the following tests
 
 **boards/tests.py**
 
-```
+```python
 from django.core.urlresolvers import reverse
 from django.urls import resolve
 from django.test import TestCase
