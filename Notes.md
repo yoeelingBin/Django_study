@@ -2165,7 +2165,7 @@ Now that we have the **base.html** template, we can easily add a top bar with a 
 
 **templates/base.html**
 
-```
+```html
 {% load static %}<!DOCTYPE html>
 <html>
   <head>
@@ -2267,7 +2267,7 @@ First thing, let’s create a new URL route named **new_topic**:
 
 **myproject/urls.py**
 
-```
+```python
 from django.conf.urls import url
 from django.contrib import admin
 
@@ -2287,7 +2287,7 @@ Now let’s create the **new_topic** view function:
 
 **boards/views.py**
 
-```
+```python
 from django.shortcuts import render, get_object_or_404
 from .models import Board
 
@@ -2302,7 +2302,7 @@ Now we just need a template named **new_topic.html** to see some code working:
 
 **templates/new_topic.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% block title %}Start a New Topic{% endblock %}
@@ -2336,7 +2336,7 @@ We can already add some tests:
 
 **boards/tests.py**
 
-```
+```python
 from django.core.urlresolvers import reverse
 from django.urls import resolve
 from django.test import TestCase
@@ -2400,7 +2400,7 @@ Good, now it’s time to start creating the form.
 
 **templates/new_topic.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% block title %}Start a New Topic{% endblock %}
@@ -2453,21 +2453,21 @@ Is a hidden field that’s submitted along with the other form data:
 
 Another thing, we have to set the **name** of the HTML inputs. The **name** will be used to retrieve the data on the server side.
 
-```
+```html
 <input type="text" class="form-control" id="id_subject" name="subject">
 <textarea class="form-control" id="id_message" name="message" rows="5"></textarea>
 ```
 
 Here is how we retrieve the data:
 
-```
+```python
 subject = request.POST['subject']
 message = request.POST['message']
 ```
 
 So, a naïve implementation of a view that grabs the data from the HTML and starts a new topic can be written like this:
 
-```
+```python
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Board, Topic, Post
