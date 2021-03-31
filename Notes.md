@@ -1787,7 +1787,7 @@ Now that’s a very common use case. In fact, Django has a shortcut to try to ge
 
 So let’s refactor the **board_topics** view again:
 
-```
+```python
 from django.shortcuts import render, get_object_or_404
 from .models import Board
 
@@ -1823,7 +1823,7 @@ We can start by writing some tests for the `HomeTests` class:
 
 **boards/tests.py**
 
-```
+```python
 class HomeTests(TestCase):
     def setUp(self):
         self.board = Board.objects.create(name='Django', description='Django board.')
@@ -1873,7 +1873,7 @@ Edit the **home.html** template:
 
 **templates/home.html**
 
-```
+```html
 <!-- code suppressed for brevity -->
 <tbody>
   {% for board in boards %}
@@ -1893,13 +1893,13 @@ Edit the **home.html** template:
 
 So basically we changed the line:
 
-```
+```html
 {{ board.name }}
 ```
 
 To:
 
-```
+```html
 <a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a>
 ```
 
@@ -1929,7 +1929,7 @@ Now the link back. We can write the test first:
 
 **boards/tests.py**
 
-```
+```python
 class BoardTopicsTests(TestCase):
     # code suppressed for brevity...
 
@@ -1966,7 +1966,7 @@ Update the board topics template:
 
 **templates/topics.html**
 
-```
+```html
 {% load static %}<!DOCTYPE html>
 <html>
   <head><!-- code suppressed for brevity --></head>
@@ -2059,7 +2059,7 @@ Create a new file named **base.html** in the **templates** folder:
 
 **templates/base.html**
 
-```
+```html
 {% load static %}<!DOCTYPE html>
 <html>
   <head>
@@ -2088,7 +2088,7 @@ Now let’s refactor our two templates: **home.html** and **topics.html**.
 
 **templates/home.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
@@ -2126,7 +2126,7 @@ The first line in the **home.html** template is `{% extends 'base.html' %}`. Thi
 
 **templates/topics.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% block title %}
