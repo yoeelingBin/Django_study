@@ -22,11 +22,11 @@ from boards import views
 urlpatterns = [
     # 格式 : url(regex正则表达式, view视图函数, kwargs=None传入参数, name=None url的名字)
     url(r'^$', views.home, name='home'),
-    url(r'^about/$', views.about, name='about'),
-    ## url(r'^(?P<username>[\w.@+-]+/$', views.user_profile, name='user_profile'),
+    # url(r'^about/$', views.about, name='about'),
+    # url(r'^(?P<username>[\w.@+-]+/$', views.user_profile, name='user_profile'),
 
     url(r'^boards/(?P<pk>\d+)/$', views.board_topics, name='board_topics'),
-    
+    url(r'^boards/(?P<pk>\d+)/new/$', views.new_topic, name='new_topic'),
     # url(r'^about/company/$', views.about_company, name='about_company'),
     # url(r'^about/author/$', views.about_author, name='about_author'),
     # url(r'^about/author/vitor$', views.about_vitor, name='about_vitor'),
