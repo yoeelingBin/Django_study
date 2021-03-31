@@ -34,11 +34,11 @@ def new_topic(request, pk):
         user = User.objects.first() # 获取现在登陆的用户
 
         topic = Topic.objects.create(
-            subject=subject
-            board=board
+            subject=subject,
+            board=board,
             starter=user
         )
 
         return redirect('board_topics', pk=board.pk) # 重定向回新建的topic页面
-        
+
     return render(request, 'new_topic.html', {'board':board})
