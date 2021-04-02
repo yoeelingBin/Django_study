@@ -2630,7 +2630,7 @@ Before we code the previous form example in a Django way, let’s write some tes
 
 **boards/tests.py**
 
-```
+```python
 ''' new imports below '''
 from django.contrib.auth.models import User
 from .views import new_topic
@@ -2732,7 +2732,7 @@ Let’s create a new file named **forms.py** inside the **boards**’ folder:
 
 **boards/forms.py**
 
-```
+```python
 from django import forms
 from .models import Topic
 
@@ -2750,7 +2750,7 @@ Now we have to refactor our **views.py**:
 
 **boards/views.py**
 
-```
+```python
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import NewTopicForm
@@ -2779,7 +2779,7 @@ def new_topic(request, pk):
 
 This is how we use the forms in a view. Let me remove the extra noise so we can focus on the core of the form processing:
 
-```
+```python
 if request.method == 'POST':
     form = NewTopicForm(request.POST)
     if form.is_valid():
@@ -2820,7 +2820,7 @@ Let’s update the **new_topic.html** template to fully use the Django Forms API
 
 **templates/new_topic.html**
 
-```
+```python
 {% extends 'base.html' %}
 
 {% block title %}Start a New Topic{% endblock %}
@@ -2840,7 +2840,7 @@ Let’s update the **new_topic.html** template to fully use the Django Forms API
 {% endblock %}
 ```
 
-The `form` have three rendering options: `form.as_table`, `form.as_ul`, and `form.as_p`. It’s a quick way to render all the fields of a form. As the name suggests, the `as_table` uses table tags to format the inputs, the `as_ul` creates an HTML list of inputs, etc.
+**The `form` have three rendering options: `form.as_table`, `form.as_ul`, and `form.as_p`. It’s a quick way to render all the fields of a form. As the name suggests, the `as_table` uses table tags to format the inputs, the `as_ul` creates an HTML list of inputs, etc.**
 
 Let’s see how it looks like:
 
