@@ -41,7 +41,7 @@ def new_topic(request, pk):
                 topic = topic,
                 created_by=user,
             )
-        return redirect('board_topics', pk=board.pk) # 重定向回新建的topic页面
+            return redirect('board_topics', pk=board.pk) # 重定向回新建的topic页面
     else:
         form = NewTopicForm()
     return render(request, 'new_topic.html', {'board':board, 'form': form})
