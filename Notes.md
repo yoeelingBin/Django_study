@@ -2512,7 +2512,7 @@ It looks like it worked. But we haven’t implemented the topics listing yet, so
 
 **templates/topics.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% block title %}
@@ -2558,7 +2558,7 @@ Two new concepts here:
 
 We are using for the first time the **topics** property in the **Board** model. The **topics** property is created automatically by Django using a reverse relationship. In the previous steps, we created a **Topic** instance:
 
-```
+```python
 def new_topic(request, pk):
     board = get_object_or_404(Board, pk=pk)
 
@@ -2589,7 +2589,7 @@ Since we are already modifying the **topics.html** template, let’s create the 
 
 **templates/topics.html**
 
-```
+```html
 {% block content %}
   <div class="mb-4">
     <a href="{% url 'new_topic' board.pk %}" class="btn btn-primary">New topic</a>
@@ -2607,7 +2607,7 @@ We can include a test to make sure the user can reach the **New topic** view fro
 
 **boards/tests.py**
 
-```
+```python
 class BoardTopicsTests(TestCase):
     # ...
 
@@ -2912,7 +2912,7 @@ class NewTopicForm(forms.ModelForm):
 
 Alright, so let’s make things pretty again.
 
-When working with Bootstrap or any other Front-End library, I like to use a Django package called **django-widget-tweaks**. It gives us more control over the rendering process, keeping the defaults and just adding extra customizations on top of it.
+When working with Bootstrap or any other Front-End library, I like to use a Django package called ==**django-widget-tweaks**==. It gives us more control over the rendering process, keeping the defaults and just adding extra customizations on top of it.
 
 Let’s start off by installing it:
 
@@ -2920,11 +2920,11 @@ Let’s start off by installing it:
 pip install django-widget-tweaks
 ```
 
-Now add it to the `INSTALLED_APPS`:
+==Now add it to the `INSTALLED_APPS`:==
 
 **myproject/settings.py**
 
-```
+```python
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -2943,7 +2943,7 @@ Now let’s take it into use:
 
 **templates/new_topic.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% load widget_tweaks %}
@@ -2981,13 +2981,13 @@ Now let’s take it into use:
 
 ![Bootstrap Form](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-3/bootstrap-form.png)
 
-There it is! So, here we are using the **django-widget-tweaks**. First, we load it in the template by using the `{% load widget_tweaks %}` template tag. Then the usage:
+There it is! So, here we are using the **django-widget-tweaks**. ==First, we load it in the template by using the `{% load widget_tweaks %}` template tag. Then the usage:==
 
-```
+```html
 {% render_field field class="form-control" %}
 ```
 
-The `render_field` tag is not part of Django; it lives inside the package we installed. To use it we have to pass a form field instance as the first parameter, and then after we can add arbitrary HTML attributes to complement it. It will be useful because then we can assign classes based on certain conditions.
+The `render_field` tag is not part of Django; it lives inside the package we installed.==To use it we have to pass a form field instance as the first parameter, and then after we can add arbitrary HTML attributes to complement it==. It will be useful because then we can assign classes based on certain conditions.
 
 Some examples of the `render_field` template tag:
 
@@ -3002,7 +3002,7 @@ Now to implement the Bootstrap 4 validation tags, we can change the **new_topic.
 
 **templates/new_topic.html**
 
-```
+```html
 <form method="post" novalidate>
   {% csrf_token %}
 
@@ -3076,7 +3076,7 @@ Now inside the **includes** folder, create a file named **form.html**:
 
 **templates/includes/form.html**
 
-```
+```html
 {% load widget_tweaks %}
 
 {% for field in form %}
@@ -3111,7 +3111,7 @@ Now we change our **new_topic.html** template:
 
 **templates/new_topic.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% block title %}Start a New Topic{% endblock %}
@@ -3131,7 +3131,7 @@ Now we change our **new_topic.html** template:
 {% endblock %}
 ```
 
-As the name suggests, the `{% include %}` is used to *include* HTML templates in another template. It’s a very useful way to reuse HTML components in a project.
+==As the name suggests, the `{% include %}` is used to *include* HTML templates in another template.== It’s a very useful way to reuse HTML components in a project.
 
 The next form we implement, we can simply use `{% include 'includes/form.html' %}` to render it.
 
@@ -3188,7 +3188,7 @@ https://github.com/sibtc/django-beginners-guide/tree/v0.3-lw
 
 #### Introduction
 
-This tutorial is going to be all about Django’s authentication system. We are going to implement the whole thing: registration, login, logout, password reset, and password change.
+This tutorial is going to be all about Django’s authentication system. ==We are going to implement the whole thing: registration, login, logout, password reset, and password change.==
 
 You are also going to get a brief introduction on how to protect some views from non-authorized users and how to access the information of the logged in user.
 
@@ -3200,13 +3200,13 @@ In the next section, you will find a few wireframes of authentication-related pa
 
 #### Wireframes
 
-We have to update the wireframes of the application. First, we are going to add new options for the top menu. If the user is not authenticated, we should have two buttons: sign up and log in.
+We have to update the wireframes of the application. First, we are going to add new options for the top menu. If the user is not authenticated, we should have two buttons: ==sign up and log in.==
 
 ![Wireframe Top Menu](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-4/wireframe-menu-not-authenticated.png)
 
 Figure 1: Top menu for not authenticated users.
 
-If the user is authenticated, we should instead display their names along with a dropdown menu with three options: my account, change password and log out.
+If the user is authenticated, we should instead display their names along with a dropdown menu with three options: ==my account, change password and log out.==
 
 ![Wireframe Top Menu](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-4/wireframe-menu-authenticated.png)
 
@@ -3240,7 +3240,7 @@ Figure 6: Change password
 
 #### Initial Setup
 
-To manage all this information, we can break it down in a different app. In the project root, in the same page where the **manage.py** script is, run the following command to start a new app:
+==To manage all this information, we can break it down in a different app.== In the project root, in the same page where the **manage.py** script is, run the following command to start a new app:
 
 ```
 django-admin startapp accounts
@@ -3261,9 +3261,9 @@ myproject/
  +-- venv/
 ```
 
-Next step, include the **accounts** app to the `INSTALLED_APPS` in the **settings.py** file:
+==Next step, include the **accounts** app to the `INSTALLED_APPS` in the **settings.py** file:==
 
-```
+```python
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -3287,11 +3287,11 @@ From now on, we will be working on the **accounts** app.
 
 ![Sign Up](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-4/Pixton_Comic_Sign_Up_View.png)
 
-Let’s start by creating the sign up view. First thing, create a new route in the **urls.py** file:
+==Let’s start by creating the sign up view. First thing, create a new route in the **urls.py** file:==
 
 **myproject/urls.py**
 
-```
+```python
 from django.conf.urls import url
 from django.contrib import admin
 
@@ -3309,7 +3309,7 @@ urlpatterns = [
 
 Notice how we are importing the **views** module from the **accounts** app in a different way:
 
-```
+```python
 from accounts import views as accounts_views
 ```
 
@@ -3319,7 +3319,7 @@ Now edit the **views.py** inside the **accounts** app and create a new view name
 
 **accounts/views.py**
 
-```
+```python
 from django.shortcuts import render
 
 def signup(request):
@@ -3330,7 +3330,7 @@ Create the new template, named **signup.html**:
 
 **templates/signup.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% block content %}
@@ -3346,7 +3346,7 @@ Time to write some tests:
 
 **accounts/tests.py**
 
-```
+```python
 from django.core.urlresolvers import reverse
 from django.urls import resolve
 from django.test import TestCase
@@ -3381,7 +3381,7 @@ For the authentication views (sign up, log in, password reset, etc.) we won’t 
 
 **templates/base.html**
 
-```
+```html
 {% load static %}<!DOCTYPE html>
 <html>
   <head>
@@ -3412,15 +3412,15 @@ For the authentication views (sign up, log in, password reset, etc.) we won’t 
 </html>
 ```
 
-I marked with comments the new bits in the **base.html** template. The block `{% block stylesheet %}{% endblock %}` will be used to add extra CSS, specific to some pages.
+I marked with comments the new bits in the **base.html** template. ==The block `{% block stylesheet %}{% endblock %}` will be used to add extra CSS, specific to some pages.==
 
-The block `{% block body %}` is wrapping the whole HTML document. We can use it to have an empty document taking advantage of the head of the **base.html**. Notice how we named the end block `{% endblock body %}`. In cases like this, it’s a good practice to name the closing tag, so it’s easier to identify where it ends.
+==The block `{% block body %}` is wrapping the whole HTML document. We can use it to have an empty document taking advantage of the head of the **base.html**==. Notice how we named the end block `{% endblock body %}`. In cases like this, it’s a good practice to name the closing tag, so it’s easier to identify where it ends.
 
 Now on the **signup.html** template, instead of using the `{% block content %}`, we can use the `{% block body %}`.
 
 **templates/signup.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% block body %}
@@ -3432,11 +3432,11 @@ Now on the **signup.html** template, instead of using the `{% block content %}`,
 
 ![Too Empty](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-4/Pixton_Comic_Empty.png)
 
-Time to create the sign up form. Django has a built-in form named **UserCreationForm**. Let’s use it:
+==Time to create the sign up form. Django has a built-in form named **UserCreationForm**==. Let’s use it:
 
 **accounts/views.py**
 
-```
+```python
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
 
@@ -3447,7 +3447,7 @@ def signup(request):
 
 **templates/signup.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% block body %}
@@ -3464,11 +3464,11 @@ def signup(request):
 
 ![Sign up](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-4/signup-3.png)
 
-Looking a little bit messy, right? We can use our **form.html** template to make it look better:
+Looking a little bit messy, right?==We can use our **form.html** template to make it look better:==
 
 **templates/signup.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% block body %}
@@ -3485,11 +3485,11 @@ Looking a little bit messy, right? We can use our **form.html** template to make
 
 ![Sign up](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-4/signup-4.png)
 
-Uh, almost there. Currently, our **form.html** partial template is displaying some raw HTML. It’s a security feature. By default Django treats all strings as unsafe, escaping all the special characters that may cause trouble. But in this case, we can trust it.
+Uh, almost there. Currently, our **form.html** partial template is displaying some raw HTML. It’s a security feature. ==By default Django treats all strings as unsafe, escaping all the special characters that may cause trouble. But in this case, we can trust it.==
 
 **templates/includes/form.html**
 
-```
+```html
 {% load widget_tweaks %}
 
 {% for field in form %}
@@ -3507,17 +3507,17 @@ Uh, almost there. Currently, our **form.html** partial template is displaying so
 {% endfor %}
 ```
 
-Basically, in the previous template we added the option `safe` to the `field.help_text`: `{{ field.help_text|safe }}`.
+==Basically, in the previous template we added the option `safe` to the `field.help_text`: `{{ field.help_text|safe }}`.==
 
 Save the **form.html** file, and check the sign up page again:
 
 ![Sign up](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-4/signup-5.png)
 
-Now let’s implement the business logic in the **signup** view:
+Now let’s ==implement the business logic in the **signup** view:==
 
 **accounts/views.py**
 
-```
+```python
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
@@ -3542,7 +3542,7 @@ On the older versions there was a `auth.login` and `auth.view.login`, which used
 
 Long story short: you can import it just as `login` if you want, it will not cause any problem.
 
-If the form is valid, a **User** instance is created with the `user = form.save()`. The created user is then passed as an argument to the **auth_login** function, manually authenticating the user. After that, the view redirects the user to the homepage, keeping the flow of the application.
+==If the form is valid, a **User** instance is created with the `user = form.save()`. The created user is then passed as an argument to the **auth_login** function, manually authenticating the user. After that, the view redirects the user to the homepage, keeping the flow of the application.==
 
 Let’s try it. First, submit some invalid data. Either an empty form, non-matching fields, or an existing username:
 
@@ -3558,7 +3558,7 @@ How can we know if it worked? Well, we can edit the **base.html** template to ad
 
 **templates/base.html**
 
-```
+```html
 {% block body %}
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
     <div class="container">
@@ -3595,7 +3595,7 @@ Let’s now improve our test cases:
 
 **accounts/tests.py**
 
-```
+```python
 from django.contrib.auth.forms import UserCreationForm
 from django.core.urlresolvers import reverse
 from django.urls import resolve
@@ -3628,7 +3628,7 @@ Now we are going to test a successful sign up. This time, let’s create a new c
 
 **accounts/tests.py**
 
-```
+```python
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.urlresolvers import reverse
@@ -3674,7 +3674,7 @@ Run the tests.
 
 Using a similar strategy, now let’s create a new class for sign up tests when the data is invalid:
 
-```
+```python
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.urlresolvers import reverse
@@ -3709,13 +3709,13 @@ class InvalidSignUpTests(TestCase):
 
 ##### Adding the Email Field to the Form
 
-Everything is working, but… The **email address** field is missing. Well, the **UserCreationForm** does not provide an **email** field. But we can extend it.
+Everything is working, but… The **email address** field is missing.==Well, the **UserCreationForm** does not provide an **email** field. But we can extend it.==
 
 Create a file named **forms.py** inside the **accounts** folder:
 
 **accounts/forms.py**
 
-```
+```python
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -3727,7 +3727,7 @@ class SignUpForm(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2')
 ```
 
-Now, instead of using the **UserCreationForm** in our **views.py**, let’s import the new form, **SignUpForm**, and use it instead:
+==Now, instead of using the **UserCreationForm** in our **views.py**, let’s import the new form, **SignUpForm**, and use it instead:==
 
 **accounts/views.py**
 
@@ -3755,7 +3755,7 @@ Just with this small change, everything is already working:
 
 Remember to change the test case to use the **SignUpForm** instead of **UserCreationForm**:
 
-```
+```python
 from .forms import SignUpForm
 
 class SignUpTests(TestCase):
@@ -3794,7 +3794,7 @@ So let’s create a new test, that verifies the HTML inputs in the template:
 
 **accounts/tests.py**
 
-```
+```python
 class SignUpTests(TestCase):
     # ...
 
@@ -3845,7 +3845,7 @@ Note that since we are using relative import within the context of the apps, we 
 
 **accounts/tests/test_view_signup.py**
 
-```
+```python
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.urls import resolve
@@ -3861,7 +3861,7 @@ Now let’s create a new test file, to test the **SignUpForm**. Add a new test f
 
 **accounts/tests/test_form_signup.py**
 
-```
+```python
 from django.test import TestCase
 from ..forms import SignUpForm
 
@@ -3883,9 +3883,9 @@ Those alerts are useful because they help to bring awareness, especially for new
 
 Let’s work a little bit on it. Here we can use Bootstrap 4 cards components to make it look good.
 
-Go to https://www.toptal.com/designers/subtlepatterns/ and find a nice background pattern to use as a background of the accounts pages. Download it, create a new folder named **img** inside the **static** folder, and place the image there.
+Go to https://www.toptal.com/designers/subtlepatterns/ and find a nice background pattern to use as a background of the accounts pages. ==Download it, create a new folder named **img** inside the **static** folder, and place the image there.==
 
-Then after that, create a new CSS file named **accounts.css** in the **static/css**. The result should be the following:
+==Then after that, create a new CSS file named **accounts.css** in the **static/css**.==The result should be the following:
 
 ```
 myproject/
@@ -3910,7 +3910,7 @@ Now edit the **accounts.css** file:
 
 **static/css/accounts.css**
 
-```
+```css
 body {
   background-image: url(../img/shattered.png);
 }
@@ -3929,7 +3929,7 @@ body {
 }
 ```
 
-In the **signup.html** template, we can change it to make use of the new CSS and also take the Bootstrap 4 card components into use:
+==In the **signup.html** template, we can change it to make use of the new CSS and also take the Bootstrap 4 card components into use:==
 
 **templates/signup.html**
 
