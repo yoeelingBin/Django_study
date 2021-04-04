@@ -3933,7 +3933,7 @@ body {
 
 **templates/signup.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% load static %}
@@ -3976,11 +3976,11 @@ With that, this should be our sign up page right now:
 
 #### Logout
 
-To keep a natural flow in the implementation, let’s add the log out view. First, edit the **urls.py** to add a new route:
+==To keep a natural flow in the implementation, let’s add the log out view==. First, edit the **urls.py** to add a new route:
 
 **myproject/urls.py**
 
-```
+```python
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
@@ -3998,9 +3998,9 @@ urlpatterns = [
 ]
 ```
 
-We imported the **views** from the Django’s contrib module. We renamed it to **auth_views** to avoid clashing with the **boards.views**. Notice that this view is a little bit different: `LogoutView.as_view()`. It’s a Django’s class-based view. So far we have only implemented views as Python functions. The class-based views provide a more flexible way to extend and reuse views. We will discuss more that subject later on.
+We imported the **views** from the Django’s contrib module. We renamed it to **auth_views** to avoid clashing with the **boards.views**. ==Notice that this view is a little bit different: `LogoutView.as_view()`. It’s a Django’s class-based view.==So far we have only implemented views as Python functions. The class-based views provide a more flexible way to extend and reuse views. We will discuss more that subject later on.
 
-Open the **settings.py** file and add the `LOGOUT_REDIRECT_URL` variable to the bottom of the file:
+==Open the **settings.py** file and add the `LOGOUT_REDIRECT_URL` variable to the bottom of the file==:
 
 **myproject/settings.py**
 
@@ -4010,23 +4010,23 @@ LOGOUT_REDIRECT_URL = 'home'
 
 Here we are passing the name of the URL pattern we want to redirect the user after the log out.
 
-After that, it’s already done. Just access the URL **127.0.0.1:8000/logout/** and you will be logged out. But hold on a second. Before you log out, let’s create the dropdown menu for logged in users.
+After that, it’s already done. Just access the URL **127.0.0.1:8000/logout/** and you will be logged out. ==But hold on a second. Before you log out, let’s create the dropdown menu for logged in users==.
 
 ------
 
 #### Displaying Menu For Authenticated Users
 
-Now we will need to do some tweaks in our **base.html** template. We have to add a dropdown menu with the logout link.
+Now we will need to do some tweaks in our **base.html** template. ==We have to add a dropdown menu with the logout link==.
 
-The Bootstrap 4 dropdown component needs jQuery to work.
+The Bootstrap 4 dropdown component needs **jQuery** to work.
 
 First, go to [jquery.com/download/](https://jquery.com/download/) and download the **compressed, production jQuery 3.2.1** version.
 
 ![jQuery Download](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-4/jquery-download.jpg)
 
-Inside the **static** folder, create a new folder named **js**. Copy the **jquery-3.2.1.min.js** file to there.
+==Inside the **static** folder, create a new folder named **js**. Copy the **jquery-3.2.1.min.js** file to there==.
 
-Bootstrap 4 also needs a library called **Popper** to work. Go to [popper.js.org](https://popper.js.org/) and download the latest version.
+==Bootstrap 4 also needs a library called **Popper** to work.== Go to [popper.js.org](https://popper.js.org/) and download the latest version.
 
 Inside the **popper.js-1.12.5** folder, go to **dist/umd** and copy the file **popper.min.js** to our **js** folder. Pay attention here; Bootstrap 4 will only work with the **umd/popper.min.js**. So make sure you are copying the right file.
 
@@ -4058,7 +4058,7 @@ In the bottom of the **base.html** file, add the scripts *after* the `{% endbloc
 
 **templates/base.html**
 
-```
+```html
 {% load static %}<!DOCTYPE html>
 <html>
   <head>
@@ -4088,11 +4088,11 @@ If you found the instructions confusing, just download the files using the direc
 
 Right-click and ***Save link as…**.
 
-Now we can add the Bootstrap 4 dropdown menu:
+==Now we can add the Bootstrap 4 dropdown menu==:
 
 **templates/base.html**
 
-```
+```html
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="{% url 'home' %}">Django Boards</a>
@@ -4128,7 +4128,7 @@ It’s working. But the dropdown is showing regardless of the user being logged 
 
 We can improve it a little bit:
 
-```
+```html
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="{% url 'home' %}">Django Boards</a>
@@ -4169,11 +4169,11 @@ Now we are telling Django to show the dropdown menu if the user is logged in, an
 
 #### Login
 
-First thing, add a new URL route:
+==First thing, add a new URL route==:
 
 **myproject/urls.py**
 
-```
+```python
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
@@ -4194,7 +4194,7 @@ urlpatterns = [
 
 Inside the `as_view()` we can pass some extra parameters, so to override the defaults. In this case, we are instructing the **LoginView** to look for a template at **login.html**.
 
-Edit the **settings.py** and add the following configuration:
+==Edit the **settings.py** and add the following configuration:==
 
 **myproject/settings.py**
 
@@ -4204,7 +4204,7 @@ LOGIN_REDIRECT_URL = 'home'
 
 This configuration is telling Django where to redirect the user after a successful login.
 
-Finally, add the login URL to the **base.html** template:
+==Finally, add the login URL to the **base.html** template==:
 
 **templates/base.html**
 
@@ -4216,7 +4216,7 @@ We can create a template similar to the sign up page. Create a new file named **
 
 **templates/login.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% load static %}
@@ -4258,13 +4258,13 @@ We can create a template similar to the sign up page. Create a new file named **
 
 ![Login](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-4/login.jpg)
 
-And we are repeating HTML templates. Let’s refactor it.
+==And we are repeating HTML templates. Let’s refactor it.==
 
 Create a new template named **base_accounts.html**:
 
 **templates/base_accounts.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% load static %}
@@ -4288,7 +4288,7 @@ Now use it on both **signup.html** and **login.html**:
 
 **templates/login.html**
 
-```
+```html
 {% extends 'base_accounts.html' %}
 
 {% block title %}Log in to Django Boards{% endblock %}
@@ -4323,7 +4323,7 @@ We still don’t have the password reset URL, so let’s leave it as `#` for now
 
 **templates/signup.html**
 
-```
+```html
 {% extends 'base_accounts.html' %}
 
 {% block title %}Sign up to Django Boards{% endblock %}
@@ -4363,11 +4363,11 @@ But if we submit an username that doesn’t exist or an invalid password, right 
 
 A little bit misleading. The fields are showing green, suggesting they are okay. Also, there’s no message saying anything.
 
-That’s because forms have a special type of error, which is called **non-field errors**. It’s a collection of errors that are not related to a specific field. Let’s refactor the **form.html** partial template to display those errors as well:
+==That’s because forms have a special type of error, which is called **non-field errors**. It’s a collection of errors that are not related to a specific field.==Let’s refactor the **form.html** partial template to display those errors as well:
 
 **templates/includes/form.html**
 
-```
+```html
 {% load widget_tweaks %}
 
 {% if form.non_field_errors %}
@@ -4383,15 +4383,15 @@ That’s because forms have a special type of error, which is called **non-field
 {% endfor %}
 ```
 
-The `{% if forloop.last %}` is just a minor thing. Because the `p` tag has a `margin-bottom`. And a form may have several non-field errors. For each non-field error, we render a `p` tag with the error. Then I’m checking if it’s the last error to render. If so, we add a Bootstrap 4 CSS class `mb-0` which stands for “margin bottom = 0”. Then the alert doesn’t look weird, with some extra space. Again, just a very minor detail. I did that just to keep the consistency of the spacing.
+==The `{% if forloop.last %}` is just a minor thing==. Because the `p` tag has a `margin-bottom`. And a form may have several non-field errors. For each non-field error, we render a `p` tag with the error. Then I’m checking if it’s the last error to render. ==If so, we add a Bootstrap 4 CSS class `mb-0` which stands for “margin bottom = 0”.==Then the alert doesn’t look weird, with some extra space. Again, just a very minor detail. I did that just to keep the consistency of the spacing.
 
 ![Login](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-4/login-3.jpg)
 
-We still have to deal with the password field though. The thing is, Django never returned the data of password fields to the client. So, instead of trying to do something smart, let’s just ignore the `is-valid` and `is-invalid` CSS classes in some cases. But our form template already looks complicated. We can move some of the code to a **template tag**.
+We still have to deal with the password field though. The thing is, Django never returned the data of password fields to the client. So, instead of trying to do something smart, let’s just ignore the `is-valid` and `is-invalid` CSS classes in some cases. But our form template already looks complicated. ==We can move some of the code to a **template tag**.==
 
 ##### Creating Custom Template Tags
 
-Inside the **boards** app, create a new folder named **templatetags**. Then inside this folder, create two empty files named **__init__.py** and **form_tags.py**.
+==Inside the **boards** app, create a new folder named **templatetags**. Then inside this folder, create two empty files named **__init__.py** and **form_tags.py**==.
 
 The structure should be the following:
 
@@ -4422,7 +4422,7 @@ In the **form_tags.py** file, let’s create two template tags:
 
 **boards/templatetags/form_tags.py**
 
-```
+```python
 from django import template
 
 register = template.Library()
@@ -4442,15 +4442,15 @@ def input_class(bound_field):
     return 'form-control {}'.format(css_class)
 ```
 
-Those are *template filters*. They work like this:
+Those are ==*template filters*.== They work like this:
 
-First, we load it in a template as we do with the **widget_tweaks** or **static** template tags. Note that after creating this file, you will have to manually stop the development server and start it again so Django can identify the new template tags.
+==First, we load it in a template as we do with the **widget_tweaks** or **static** template tags.== Note that after creating this file, you will have to manually stop the development server and start it again so Django can identify the new template tags.
 
 ```
 {% load form_tags %}
 ```
 
-Then after that, we can use them in a template:
+==Then after that, we can use them in a template:==
 
 ```
 {{ form.username|field_type }}
@@ -4477,7 +4477,7 @@ Or in case of the **input_class**:
 'form-control is-invalid'
 ```
 
-Now update the **form.html** to use the new template tags:
+==Now update the **form.html** to use the new template tags:==
 
 **templates/includes/form.html**
 
