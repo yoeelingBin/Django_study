@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'widget_tweaks',
+    'boards.templatetags',
 
     'accounts',
     'boards',
@@ -69,6 +70,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            # 'libraries':{
+            #     'my_customer_tags': 'boards.templates.form_tags',
+            # },
         },
     },
 ]
