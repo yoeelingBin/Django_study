@@ -4548,7 +4548,7 @@ Fix the **test_views.py** imports:
 
 **boards/tests/test_views.py**
 
-```
+```python
 from ..views import home, board_topics, new_topic
 from ..models import Board, Topic, Post
 from ..forms import NewTopicForm
@@ -4556,9 +4556,9 @@ from ..forms import NewTopicForm
 
 Execute the tests just to make sure everything is working.
 
-**boards/tests/test_templatetags.py**
+**boards/tests/test_templatetags.py**==注意'form-control'后的空格！==
 
-```
+```python
 from django import forms
 from django.test import TestCase
 from ..templatetags.form_tags import field_type, input_class
@@ -4590,7 +4590,7 @@ class InputClassTests(TestCase):
         self.assertEquals('form-control is-invalid', input_class(form['name']))
 ```
 
-We created a form class to be used in the tests then added test cases covering the possible scenarios in the two template tags.
+==We created a form class to be used in the tests then added test cases covering the possible scenarios in the two template tags==.
 
 ```
 python manage.py test
@@ -4616,9 +4616,9 @@ Another important thing before we start is that, for the password reset process,
 
 ##### Console Email Backend
 
-The idea is during the development of the project, instead of sending real emails, we just log them. There are two options: writing all emails in a text file or simply displaying them in the console. I find the latter option more convenient because we are already using a console to run the development server and the setup is a bit easier.
+The idea is during the development of the project, instead of sending real emails, we just log them. There are two options: writing all emails in a text file or ==simply displaying them in the console==. I find the latter option more convenient because we are already using a console to run the development server and the setup is a bit easier.
 
-Edit the **settings.py** module and add the `EMAIL_BACKEND` variable to the end of the file:
+==Edit the **settings.py** module and add the `EMAIL_BACKEND` variable to the end of the file:==
 
 **myproject/settings.py**
 
@@ -4628,18 +4628,18 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ##### Configuring the Routes
 
-The password reset process requires four views:
+==The password reset process requires four views:==
 
 - A page with a form to start the reset process;
 - A success page saying the process initiated, instructing the user to check their spam folders, etc.;
 - A page to check the token sent via email;
 - A page to tell the user if the reset was successful or not.
 
-The views are built-in, we don’t need to implement anything. All we need to do is add the routes to the **urls.py** and create the templates.
+The views are built-in, we don’t need to implement anything. ==All we need to do is add the routes to the **urls.py** and create the templates.==
 
 **myproject/urls.py** [(view complete file contents)](https://gist.github.com/vitorfs/117e300e00d5685f7186e09260f82736#file-urls-py-L14)
 
-```
+```python
 url(r'^reset/$',
     auth_views.PasswordResetView.as_view(
         template_name='password_reset.html',
@@ -4661,7 +4661,7 @@ url(r'^reset/complete/$',
 
 The `template_name` parameter in the password reset views are optional. But I thought it would be a good idea to re-define it, so the link between the view and the template be more obvious than just using the defaults.
 
-Inside the **templates** folder, the following template files:
+==Inside the **templates** folder, the following template files==:
 
 - **password_reset.html**
 - **password_reset_email.html**: this template is the body of the email message sent to the user
@@ -4670,7 +4670,7 @@ Inside the **templates** folder, the following template files:
 - **password_reset_confirm.html**
 - **password_reset_complete.html**
 
-Before we start implementing the templates, let’s prepare a new test file.
+==Before we start implementing the templates, let’s prepare a new test file.==
 
 We can add just some basic tests because those views and forms are already tested in the Django code. We are going to test just the specifics of our application.
 
