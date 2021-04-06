@@ -8,15 +8,15 @@ from django.test import TestCase
 
 class PasswordResetTests(TestCase):
     def setUp(self):
-        url = reverse('password_reset')
+        url = reverse('password_reset_done')
         self.response = self.client.get(url)
     
     def test_status_code(self):
         self.assertEquals(self.response.status_code, 200)
 
     def test_view_function(self):
-        view = resolve('/reset/')
-        self.assertEquals(view.func.view_class, auth_views.PasswordResetView)
+        view = resolve('/reset/done')
+        self.assertEquals(view.func.view_class, auth_views.PasswordResetDoneView)
 
     def test_csrf(self):
         self.assertContains(self.response, 'csrfmiddlewaretoken')
