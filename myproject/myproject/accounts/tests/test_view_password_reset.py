@@ -32,6 +32,23 @@ class PasswordResetTests(TestCase):
         self.assertContains(self.response, 'input', 2)
         self.assertContains(self.response, 'type="email"', 1)
 
+class SuccessfulPasswordResetTests(TestCase):
+    def setUp(self):
+        email = 'john@doe.com'
+        User.objects.create_user(username='john', email=email, password='123abcdef')
+        url = reverse('password_reset')
+        self.response = self.client.post(url, {'email': email})
+
+    def test_redirection(self):
+        '''
+        一个有效的表单提交应该将用户重定向到'password_reset_done'视图
+        '''
+        url = reverse('password_reset_done')
+        self.assertRedirects(self.response, url)
+
+    def test_send_password_reset_email(self):
+        self.assertEqual(1, len(mail.outbox))
+
 
 class InvalidPasswordResetTests(TestCase):
     def setUp(self):
