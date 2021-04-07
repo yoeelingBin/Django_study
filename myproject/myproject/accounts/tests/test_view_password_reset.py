@@ -8,15 +8,15 @@ from django.test import TestCase
 
 class PasswordResetTests(TestCase):
     def setUp(self):
-        url = reverse('password_reset')
+        url = reverse('password_reset_done')
         self.response = self.client.get(url)
     
     def test_status_code(self):
         self.assertEquals(self.response.status_code, 200)
 
     def test_view_function(self):
-        view = resolve('/reset/')
-        self.assertEquals(view.func.view_class, auth_views.PasswordResetView)
+        view = resolve('/reset/done')
+        self.assertEquals(view.func.view_class, auth_views.PasswordResetDoneView)
 
     def test_csrf(self):
         self.assertContains(self.response, 'csrfmiddlewaretoken')
@@ -31,6 +31,23 @@ class PasswordResetTests(TestCase):
         '''
         self.assertContains(self.response, 'input', 2)
         self.assertContains(self.response, 'type="email"', 1)
+
+class SuccessfulPasswordResetTests(TestCase):
+    def setUp(self):
+        email = 'john@doe.com'
+        User.objects.create_user(username='john', email=email, password='123abcdef')
+        url = reverse('password_reset')
+        self.response = self.client.post(url, {'email': email})
+
+    def test_redirection(self):
+        '''
+        一个有效的表单提交应该将用户重定向到'password_reset_done'视图
+        '''
+        url = reverse('password_reset_done')
+        self.assertRedirects(self.response, url)
+
+    def test_send_password_reset_email(self):
+        self.assertEqual(1, len(mail.outbox))
 
 
 class InvalidPasswordResetTests(TestCase):
