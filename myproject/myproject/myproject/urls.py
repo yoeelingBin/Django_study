@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url
+from django.contrib.auth import views as auth_views
+
 from boards import views
 from accounts import views as accounts_views
-from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     # 格式 : url(regex正则表达式, view视图函数, kwargs=None传入参数, name=None url的名字)
@@ -30,14 +31,6 @@ urlpatterns = [
         auth_views.LoginView.as_view(template_name='login.html'),
         name='login'),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
-    url(r'^boards/(?P<pk>\d+)/$', views.board_topics, name='board_topics'),
-    url(r'^boards/(?P<pk>\d+)/new/$', views.new_topic, name='new_topic'),
-    # url(r'^about/company/$', views.about_company, name='about_company'),
-    # url(r'^about/author/$', views.about_author, name='about_author'),
-    # url(r'^about/author/vitor$', views.about_vitor, name='about_vitor'),
-    # url(r'^about/author/erica$', views.about_erica, name='about_erica'),
-    # url(r'^privacy/$', views.privacy_policy, name='privacy_policy'),
-    url(r'^admin/', admin.site.urls),
 
     # 修改密码的url
     url(r'^reset/$',
@@ -58,4 +51,25 @@ urlpatterns = [
         auth_views.PasswordResetCompleteView.as_view(
             template_name='password_reset_complete.html'),
         name='password_reset_complete'),
+
+    # 修改密码的url
+    url(r'^settings/password/$',
+        auth_views.PasswordChangeView.as_view(
+            template_name='password_change.html'),
+        name='password_change'),
+    url(r'^settings/password/done/$',
+        auth_views.PasswordChangeDoneView.as_view(
+            template_name='password_change_done.html'),
+        name='password_change_done'),
+
+    url(r'^boards/(?P<pk>\d+)/$', views.board_topics, name='board_topics'),
+    url(r'^boards/(?P<pk>\d+)/new/$', views.new_topic, name='new_topic'),
+    url(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/$', views.topic_posts, name='topic_posts'),
+    # url(r'^about/company/$', views.about_company, name='about_company'),
+    # url(r'^about/author/$', views.about_author, name='about_author'),
+    # url(r'^about/author/vitor$', views.about_vitor, name='about_vitor'),
+    # url(r'^about/author/erica$', views.about_erica, name='about_erica'),
+    # url(r'^privacy/$', views.privacy_policy, name='privacy_policy'),
+
+    url(r'^admin/', admin.site.urls),
 ]

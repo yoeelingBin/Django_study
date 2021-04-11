@@ -4812,11 +4812,11 @@ The Django Boards Team
 
 ![Password Reset Email](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-4/password_reset_email.png)
 
-We can create a specific file to test the email message. Create a new file named **test_mail_password_reset.py** inside the **accounts/tests** folder:
+==We can create a specific file to test the email message.== Create a new file named **test_mail_password_reset.py** inside the **accounts/tests** folder:
 
 **accounts/tests/test_mail_password_reset.py**
 
-```
+```python
 from django.core import mail
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -4900,7 +4900,7 @@ class PasswordResetDoneTests(TestCase):
 
 **templates/password_reset_confirm.html**
 
-```
+```html
 {% extends 'base_accounts.html' %}
 
 {% block title %}
@@ -4951,7 +4951,7 @@ Or if the link has already been used:
 
 **accounts/tests/test_view_password_reset.py**
 
-```
+```python
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
@@ -5028,7 +5028,7 @@ class InvalidPasswordResetConfirmTests(TestCase):
 
 **templates/password_reset_complete.html**
 
-```
+```html
 {% extends 'base_accounts.html' %}
 
 {% block title %}Password changed!{% endblock %}
@@ -5054,7 +5054,7 @@ class InvalidPasswordResetConfirmTests(TestCase):
 
 **accounts/tests/test_view_password_reset.py** [(view complete file contents)](https://gist.github.com/vitorfs/c9657d39d28c2a0cfb0933e715bfc9cf#file-test_view_password_reset-py-L149)
 
-```
+```python
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse
 from django.urls import resolve
@@ -5077,18 +5077,18 @@ class PasswordResetCompleteTests(TestCase):
 
 #### Password Change View
 
-This view is meant to be used by logged in users that want to change their password. Usually, those forms are composed of three fields: old password, new password, and new password confirmation.
+==This view is meant to be used by logged in users that want to change their password.== Usually, those forms are composed of three fields: **old password, new password, and new password confirmation.**
 
 **myproject/urls.py** [(view complete file contents)](https://gist.github.com/vitorfs/0927898f37831cad0d6a4ec538b8a002#file-urls-py-L31)
 
-```
+```python
 url(r'^settings/password/$', auth_views.PasswordChangeView.as_view(template_name='password_change.html'),
     name='password_change'),
 url(r'^settings/password/done/$', auth_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html'),
     name='password_change_done'),
 ```
 
-Those views only works for logged in users. They make use of a view decorator named `@login_required`. This decorator prevents non-authorized users to access this page. If the user is not logged in, Django will redirect them to the login page.
+Those views only works for logged in users. ==They make use of a view decorator named `@login_required`. This decorator prevents non-authorized users to access this page.==If the user is not logged in, Django will redirect them to the login page.
 
 Now we have to define what is the login URL of our application in the **settings.py**:
 
