@@ -1,9 +1,9 @@
 from django.test import TestCase
-from django.urls import reverse, resolve
-from ..views import home, board_topics, new_topic
-from ..models import Board, Topic, Post
-from django.contrib.auth.models import User
-from ..forms import NewTopicForm
+from django.urls import resolve, reverse
+
+from ..models import Board
+from ..views import board_topics
+
 
 class BoardTopicsTests(TestCase):
     def setUp(self):
@@ -23,18 +23,10 @@ class BoardTopicsTests(TestCase):
         view = resolve('/boards/1/')
         self.assertEquals(view.func, board_topics)
 
-    def test_board_topics_view_contains_link_back_to_homepage(self):
-        board_topics_url = reverse('board_topics', kwargs={'pk':1})
-        response = self.client.get(board_topics_url)
-        homepage_url = reverse('home')
-        self.assertContains(response, 'href="{}"'.format(homepage_url))
-
     def test_board_topics_view_contains_navigation_links(self):
-        board_topics_url = reverse('board_topics', kwargs={'pk':1})
+        board_topics_url = reverse('board_topics', kwargs={'pk': 1})
         homepage_url = reverse('home')
-        new_topic_url = reverse('new_topic', kwargs={'pk':1})
-
+        new_topic_url = reverse('new_topic', kwargs={'pk': 1})
         response = self.client.get(board_topics_url)
-
-        self.assertContains(response, 'href="{}"'.format(homepage_url))
-        self.assertContains(response, 'href="{}"'.format(new_topic_url))
+        self.assertContains(response, 'href="{0}"'.format(homepage_url))
+        self.assertContains(response, 'href="{0}"'.format(new_topic_url))
