@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Board, Topic, Post
-from .forms import NewTopicForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+
+from .models import Board, Topic, Post
+from .forms import NewTopicForm
 
 
 # Create your views here.
@@ -11,13 +12,13 @@ def home(request):
     return render(request, 'home.html', {'boards': boards})
 
 
-def about(request):
-    return render(request, 'about.html')
+# def about(request):
+#     return render(request, 'about.html')
 
 
-def about_company(request):
-    return render(request, 'about_company.html',
-                  {'company_name': 'Simple Complex'})
+# def about_company(request):
+#     return render(request, 'about_company.html',
+#                   {'company_name': 'Simple Complex'})
 
 
 def board_topics(request, pk):
@@ -27,19 +28,18 @@ def board_topics(request, pk):
 @login_required
 def new_topic(request, pk):
     board = get_object_or_404(Board, pk=pk)
-    user = User.objects.first()
 
     if request.method == 'POST':
         form = NewTopicForm(request.POST)
         if form.is_valid():
             topic = form.save(commit=False)
             topic.board = board
-            topic.starter = user
+            topic.starter = request.user
             topic.save()
             post = Post.objects.create(
                 message=form.cleaned_data.get('message'),
-                topic = topic,
-                created_by=user,
+                topic=topic,
+                created_by=request.user,
             )
             return redirect('board_topics', pk=board.pk) # 重定向回新建的topic页面
     else:
