@@ -5263,17 +5263,17 @@ Welcome to the 5th part of the tutorial series! In this tutorial, we are going t
 
 #### Protecting Views
 
-We have to start protecting our views against non-authorized users. So far we have the following view to start new posts:
+==We have to start protecting our views against non-authorized users==. So far we have the following view to start new posts:
 
 ![Topics view not logged in](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-5/topics-1.png)
 
 In the picture above the user is not logged in, and even though they can see the page and the form.
 
-Django has a built-in *view decorator* to avoid that issue:
+==Django has a built-in *view decorator* to avoid that issue==:
 
 **boards/views.py** [(view complete file contents)](https://gist.github.com/vitorfs/4d3334a0daa9e7a872653a22ff39320a#file-models-py-L19)
 
-```
+```python
 from django.contrib.auth.decorators import login_required
 
 @login_required
@@ -5285,13 +5285,13 @@ From now on, if the user is not authenticated they will be redirected to the log
 
 ![Login required redirect](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-5/login-required.png)
 
-Notice the query string **?next=/boards/1/new/**. We can improve the log in template to make use of the **next** variable and improve the user experience.
+Notice the query string **?next=/boards/1/new/**. ==We can improve the log in template to make use of the **next** variable and improve the user experience==.
 
 ##### Configuring Login Next Redirect
 
 **templates/login.html** [(view complete file contents)](https://gist.github.com/vitorfs/1ab597fe18e2dc56028f7aa8c3b588b3#file-login-html-L13)
 
-```
+```html
 <form method="post" novalidate>
   {% csrf_token %}
   <input type="hidden" name="next" value="{{ next }}">
@@ -5304,11 +5304,11 @@ Then if we try to log in now, the application will direct us back to where we we
 
 ![Magic](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-5/Pixton_Comic_Magic.png)
 
-So the **next** parameter is part of a built-in functionality.
+==So the **next** parameter is part of a built-in functionality.==
 
 ##### Login Required Tests
 
-Let’s now add a test case to make sure this view is protected by the `@login_required` decorator. But first, let’s do some refactoring in the **boards/tests/test_views.py** file.
+Let’s now add a test case to make sure this view is protected by the `@login_required` decorator. ==But first, let’s do some refactoring in the **boards/tests/test_views.py** file.==
 
 Let’s split the **test_views.py** into three files:
 
@@ -5348,7 +5348,7 @@ New let’s add a new test case in the **test_view_new_topic.py** to check if th
 
 **boards/tests/test_view_new_topic.py** [(view complete file contents)](https://gist.github.com/vitorfs/13e75451396d76354b476edaefadbdab#file-test_view_new_topic-py-L84)
 
-```
+```python
 from django.test import TestCase
 from django.urls import reverse
 from ..models import Board
@@ -5370,11 +5370,11 @@ In the test case above we are trying to make a request to the **new topic** view
 
 #### Accessing the Authenticated User
 
-Now we can improve the **new_topic** view and this time set the proper user, instead of just querying the database and picking the first user. That code was temporary because we had no way to authenticate the user. But now we can do better:
+==Now we can improve the **new_topic** view and this time set the proper user, instead of just querying the database and picking the first user.==That code was temporary because we had no way to authenticate the user. But now we can do better:
 
 **boards/views.py** [(view complete file contents)](https://gist.github.com/vitorfs/483936caca4618dc275545ad2dfbef24#file-views-py-L19)
 
-```
+```python
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -5410,7 +5410,7 @@ We can do a quick test here by adding a new topic:
 
 #### Topic Posts View
 
-Let’s take the time now to implement the posts listing page, accordingly to the wireframe below:
+==Let’s take the time now to implement the posts listing page, accordingly to the wireframe below==:
 
 ![Wireframe Posts](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-5/wireframe-posts.png)
 
@@ -5418,17 +5418,17 @@ First, we need a route:
 
 **myproject/urls.py** [(view complete file contents)](https://gist.github.com/vitorfs/aede6d3b7dc3494cf0df48f796075403#file-urls-py-L38)
 
-```
+```python
 url(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/$', views.topic_posts, name='topic_posts'),
 ```
 
-Observe that now we are dealing with two keyword arguments: `pk` which is used to identify the Board, and now we have the `topic_pk` which is used to identify which topic to retrieve from the database.
+==Observe that now we are dealing with two keyword arguments==: `pk` which is used to identify the Board, and now we have the `topic_pk` which is used to identify which topic to retrieve from the database.
 
 The matching view would be like this:
 
 **boards/views.py** [(view complete file contents)](https://gist.github.com/vitorfs/3d73ef25a01eceea07ef3ad8538437cf#file-views-py-L39)
 
-```
+```python
 from django.shortcuts import get_object_or_404, render
 from .models import Topic
 
@@ -5441,7 +5441,7 @@ Note that we are indirectly retrieving the current board. Remember that the topi
 
 **templates/topic_posts.html** [(view complete file contents)](https://gist.github.com/vitorfs/17e583f4f0068850c5929bd307dd436a)
 
-```
+```html
 {% extends 'base.html' %}
 
 {% block title %}{{ topic.subject }}{% endblock %}
@@ -5465,7 +5465,7 @@ Now let’s create a new test file for the **topic_posts** view:
 
 **boards/tests/test_view_topic_posts.py**
 
-```
+```python
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import resolve, reverse
@@ -5493,7 +5493,7 @@ class TopicPostsTests(TestCase):
 
 Note that the test setup is starting to get more complex. We can create mixins or an abstract class to reuse the code as needed. We can also use a third party library to setup some test data, to reduce the boilerplate code.
 
-Also, by now we already have a significant amount of tests, and it’s gradually starting to run slower. We can instruct the test suite just to run tests from a given app:
+Also, by now we already have a significant amount of tests, and it’s gradually starting to run slower. ==We can instruct the test suite just to run tests from a given app==:
 
 ```
 python manage.py test boards
@@ -5507,7 +5507,7 @@ OK
 Destroying test database for alias 'default'...
 ```
 
-We could also run only a specific test file:
+==We could also run only a specific test file==:
 
 ```
 python manage.py test boards.tests.test_view_topic_posts
@@ -5539,11 +5539,11 @@ Cool, right?
 
 Let’s keep moving forward.
 
-Inside the **topic_posts.html**, we can create a for loop iterating over the topic posts:
+==Inside the **topic_posts.html**, we can create a for loop iterating over the topic posts:==
 
 **templates/topic_posts.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% load static %}
@@ -5600,15 +5600,15 @@ Since right now we don’t have a way to upload a user picture, let’s just hav
 
 I downloaded a free image from [IconFinder](https://www.iconfinder.com/search/?q=user&license=2&price=free) and saved in the **static/img** folder of the project.
 
-We still haven’t really explored Django’s ORM, but the code `{{ post.created_by.posts.count }}` is executing a `select count` in the database. Even though the result is correct, it is a bad approach. Right now it’s causing several unnecessary queries in the database. But hey, don’t worry about that right now. Let’s focus on how we interact with the application. Later on, we are going to improve this code, and how to diagnose heavy queries.
+We still haven’t really explored Django’s ORM, but the code `{{ post.created_by.posts.count }}` is executing a `select count` in the database. Even though the result is correct, it is a bad approach. Right now it’s causing several unnecessary queries in the database. But hey, don’t worry about that right now. Let’s focus on how we interact with the application. ==Later on, we are going to improve this code, and how to diagnose heavy queries.==
 
 Another interesting point here is that we are testing if the current post belongs to the authenticated user: `{% if post.created_by == user %}`. And we are only showing the edit button for the owner of the post.
 
-Since we now have the URL route to the topic posts listing, update the **topics.html** template with the link:
+==Since we now have the URL route to the topic posts listing, update the **topics.html** template with the link==:
 
 **templates/topics.html** [(view complete file contents)](https://gist.github.com/vitorfs/cb4b7c9ff382ddeafb4114d0c84b3869)
 
-```
+```html
 {% for topic in board.topics.all %}
   <tr>
     <td><a href="{% url 'topic_posts' board.pk topic.pk %}">{{ topic.subject }}</a></td>
@@ -5632,11 +5632,11 @@ New URL route:
 
 **myproject/urls.py** [(view complete file contents)](https://gist.github.com/vitorfs/71a5f9f39202edfbab9bacf11844548b#file-urls-py-L39)
 
-```
+```python
 url(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/reply/$', views.reply_topic, name='reply_topic'),
 ```
 
-Create a new form for the post reply:
+==Create a new form for the post reply==:
 
 **boards/forms.py** [(view complete file contents)](https://gist.github.com/vitorfs/3dd5ed2b3e27b4c12886e9426acf8fda#file-forms-py-L20)
 
@@ -5654,7 +5654,7 @@ A new view protected by `@login_required` and with a simple form processing logi
 
 **boards/views.py** [(view complete file contents)](https://gist.github.com/vitorfs/9e3811d9b11958b4106d99d9243efa71#file-views-py-L45)
 
-```
+```python
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from .forms import PostForm
@@ -5678,7 +5678,7 @@ def reply_topic(request, pk, topic_pk):
 
 Also take the time to update the return redirect of the **new_topic** view function (marked with the comment **# TODO**).
 
-```
+```python
 @login_required
 def new_topic(request, pk):
     board = get_object_or_404(Board, pk=pk)
@@ -5697,7 +5697,7 @@ The first version of our template:
 
 **templates/reply_topic.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% load static %}
@@ -5748,7 +5748,7 @@ We could now change the starter post, so to give it more emphasis in the page:
 
 **templates/topic_posts.html** [(view complete file contents)](https://gist.github.com/vitorfs/3e4ad94ac3ae9d72194af4006d4aeaff#file-topic_posts-html-L20)
 
-```
+```html
 {% for post in topic.posts.all %}
   <div class="card mb-2 {% if forloop.first %}border-dark{% endif %}">
     {% if forloop.first %}
@@ -5767,7 +5767,7 @@ Now for the tests, pretty standard, just like we have been doing so far. Create 
 
 **boards/tests/test_view_reply_topic.py** [(view complete file contents)](https://gist.github.com/vitorfs/7148fcb95075fb6641e638214b751cf1)
 
-```
+```python
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -5802,13 +5802,13 @@ class InvalidReplyTopicTests(ReplyTopicTestCase):
 
 The essence here is the custom test case class **ReplyTopicTestCase**. Then all the four classes will extend this test case.
 
-First, we test if the view is protected with the `@login_required` decorator, then check the HTML inputs, status code. Finally, we test a valid and an invalid form submission.
+==First, we test if the view is protected with the `@login_required` decorator, then check the HTML inputs, status code. Finally, we test a valid and an invalid form submission==.
 
 ------
 
 #### QuerySets
 
-Let’s take the time now to explore some of the models’ API functionalities a little bit. First, let’s improve the home view:
+Let’s take the time now to explore some of the ==models’ API functionalities a little bit==. First, let’s improve the home view:
 
 ![Boards](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-5/boards-1.png)
 
@@ -5820,11 +5820,11 @@ We have three tasks here:
 
 Let’s play with the Python terminal first, before we jump into the implementation.
 
-Since we are going to try things out in the Python terminal, it’s a good idea to define a `__str__` method for all our models.
+==Since we are going to try things out in the Python terminal, it’s a good idea to define a `__str__` method for all our models==.
 
 **boards/models.py** [(view complete file contents)](https://gist.github.com/vitorfs/9524eb42005697fbb79836285b50b1f4)
 
-```
+```python
 from django.db import models
 from django.utils.text import Truncator
 
@@ -5845,7 +5845,7 @@ class Post(models.Model):
         return truncated_message.chars(30)
 ```
 
-In the Post model we are using the **Truncator** utility class. It’s a convenient way to truncate long strings into an arbitrary string size (here we are using 30).
+==In the Post model we are using the **Truncator** utility class. It’s a convenient way to truncate long strings into an arbitrary string size (here we are using 30).==
 
 Now let’s open the Python shell terminal:
 
@@ -5856,7 +5856,7 @@ python manage.py shell
 board = Board.objects.get(name='Django')
 ```
 
-The easiest of the three tasks is to get the current topics count, because the Topic and Board are directly related:
+==The easiest of the three tasks is to get the current topics count, because the Topic and Board are **directly related**==:
 
 ```
 board.topics.all()
@@ -5868,7 +5868,7 @@ board.topics.count()
 
 That’s about it.
 
-Now the number of *posts* within a *board* is a little bit trickier because Post is not directly related to Board.
+==Now the number of *posts* within a *board* is a little bit trickier because **Post is not directly related to Board**.==
 
 ```
 from boards.models import Post
@@ -5885,7 +5885,7 @@ Post.objects.count()
 
 Here we have 11 posts. But not all of them belongs to the “Django” board.
 
-Here is how we can filter it:
+Here is how we can ==**filter**== it:
 
 ```
 from boards.models import Board, Post
@@ -5902,9 +5902,9 @@ Post.objects.filter(topic__board=board).count()
 7
 ```
 
-The double underscores `topic__board` is used to navigate through the models’ relationships. Under the hoods, Django builds the bridge between the Board - Topic - Post, and build a SQL query to retrieve just the posts that belong to a specific board.
+==The double underscores `topic__board` is used to navigate through the models’ relationships. Under the hoods, Django builds the bridge between the Board - Topic - Post, and build a SQL query to retrieve just the posts that belong to a specific board.==
 
-Now our last mission is to identify the last post.
+Now our last mission is to identify the **last post.**
 
 ```
 # order by the `created_at` field, getting the most recent first
@@ -5923,7 +5923,7 @@ Sweet. Now we can implement it.
 
 **boards/models.py** [(view complete file contents)](https://gist.github.com/vitorfs/74077336decd75292082752eb8405ad3)
 
-```
+```python
 from django.db import models
 
 class Board(models.Model):
@@ -5946,7 +5946,7 @@ Now we can improve the home HTML template to display this brand new information:
 
 **templates/home.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
@@ -6029,7 +6029,7 @@ It seems like we have a problem with our implementation here. The application is
 
 **templates/home.html**
 
-```
+```html
 {% with post=board.get_last_post %}
   {% if post %}
     <small>
@@ -6067,7 +6067,7 @@ Now it’s time to improve the topics listing view.
 
 ![Topics](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-5/topics-3.png)
 
-I will show you another way to include the count, this time to the number of replies, in a more effective way.
+==I will show you another way to include the count, this time to the number of replies, in a more effective way.==
 
 As usual, let’s try first with the Python shell:
 
@@ -6089,7 +6089,7 @@ for topic in topics:
 1
 ```
 
-Here we are using the `annotate` QuerySet method to generate a new “column” on the fly. This new column, which will be translated into a property, accessible via `topic.replies` contain the count of posts a given topic has.
+==Here we are using the `annotate` QuerySet method to generate a new “column” on the fly. This new column, which will be translated into a property, accessible via `topic.replies` contain the count of posts a given topic has.==
 
 We can do just a minor fix because the replies should not consider the starter topic (which is also a Post instance).
 
@@ -6111,7 +6111,7 @@ Cool, right?
 
 **boards/views.py** [(view complete file contents)](https://gist.github.com/vitorfs/f22b493b3e076aba9351c9d98f547f5e#file-views-py-L14)
 
-```
+```python
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, render
 from .models import Board
@@ -6124,7 +6124,7 @@ def board_topics(request, pk):
 
 **templates/topics.html** [(view complete file contents)](https://gist.github.com/vitorfs/1a2235f05f436c92025dc86028c22fc4#file-topics-html-L28)
 
-```
+```html
 {% for topic in topics %}
   <tr>
     <td><a href="{% url 'topic_posts' board.pk topic.pk %}">{{ topic.subject }}</a></td>
@@ -6144,7 +6144,7 @@ Next step now is to fix the *views* count. But for that, we will need to create 
 
 #### Migrations
 
-Migration is a fundamental part of Web development with Django. It’s how we evolve our application’s models keeping the models’ files synchronized with the database.
+==Migration is a fundamental part of Web development with Django. It’s how we evolve our application’s models keeping the models’ files synchronized with the database.==
 
 When we first run the command `python manage.py migrate` Django grab all migration files and generate the database schema.
 
@@ -6166,7 +6166,7 @@ Let’s create a migration by adding a new field to the Topic model:
 
 **boards/models.py** [(view complete file contents)](https://gist.github.com/vitorfs/816f47aa4df8e7b157df75e0ff209aac#file-models-py-L25)
 
-```
+```python
 class Topic(models.Model):
     subject = models.CharField(max_length=255)
     last_updated = models.DateTimeField(auto_now_add=True)
@@ -6207,7 +6207,7 @@ Now we can use it to keep track of the number of views a given topic is receivin
 
 **boards/views.py** [(view complete file contents)](https://gist.github.com/vitorfs/c0c97c1e050204d9152c59b4da2f9305#file-views-py-L41)
 
-```
+```python
 from django.shortcuts import get_object_or_404, render
 from .models import Topic
 
@@ -6220,7 +6220,7 @@ def topic_posts(request, pk, topic_pk):
 
 **templates/topics.html** [(view complete file contents)](https://gist.github.com/vitorfs/70ebb1a06e1044387943ee83bafcd526)
 
-```
+```html
 {% for topic in topics %}
   <tr>
     <td><a href="{% url 'topic_posts' board.pk topic.pk %}">{{ topic.subject }}</a></td>
@@ -6270,9 +6270,9 @@ Alright, folks! Let’s implement some code. We have plenty of work to do today!
 
 #### Views Strategies
 
-At the end of the day, all Django views are *functions*. Even class-based views (CBV). Behind the scenes, it does all the magic and ends up returning a view function.
+At the end of the day, ==all Django views are *functions*==. Even class-based views (CBV). Behind the scenes, it does all the magic and ends up returning a view function.
 
-Class-based views were introduced to make it easier for developers to reuse and extend views. There are many benefits of using them, such as the extendability, the ability to use O.O. techniques such as multiple inheritances, the handling of HTTP methods are done in separate methods, rather than using conditional branching, and there are also the Generic Class-Based Views (GCBV).
+==Class-based views were introduced to make it easier for developers to reuse and extend views.== There are many benefits of using them, such as the extendability, the ability to use O.O. techniques such as multiple inheritances, the handling of HTTP methods are done in separate methods, rather than using conditional branching, and there are also the Generic Class-Based Views (GCBV).
 
 Before we move forward, let’s clarify what those three terms mean:
 
@@ -6282,7 +6282,7 @@ Before we move forward, let’s clarify what those three terms mean:
 
 A FBV is the simplest representation of a Django view: it’s just a function that receives an **HttpRequest** object and returns an **HttpResponse**.
 
-A CBV is every Django view defined as a Python class that extends the `django.views.generic.View` abstract class. A CBV essentially is a class that wraps a FBV. CBVs are great to extend and reuse code.
+A CBV is every Django view defined as a Python class that ==extends the `django.views.generic.View` abstract class.== A CBV essentially is a class that wraps a FBV. CBVs are great to extend and reuse code.
 
 GCBVs are built-in CBVs that solve specific problems such as listing views, create, update, and delete views.
 
@@ -6292,7 +6292,7 @@ Below we are going to explore some examples of the different implementation stra
 
 **views.py**
 
-```
+```python
 def new_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
@@ -6306,7 +6306,7 @@ def new_post(request):
 
 **urls.py**
 
-```
+```python
 urlpatterns = [
     url(r'^new_post/$', views.new_post, name='new_post'),
 ]
@@ -6314,13 +6314,13 @@ urlpatterns = [
 
 ##### Class-Based View
 
-A CBV is a view that extends the **View** class. The main difference here is that the requests are handled inside class methods named after the HTTP methods, such as **get**, **post**, **put**, **head**, etc.
+==A CBV is a view that extends the **View** class. The main difference here is that the requests are handled inside class methods named after the HTTP methods, such as **get**, **post**, **put**, **head**, etc.==
 
 So, here we don’t need to do a conditional to check if the request is a **POST** or if it’s a **GET**. The code goes straight to the right method. This logic is handled internally in the **View** class.
 
 **views.py**
 
-```
+```python
 from django.views.generic import View
 
 class NewPostView(View):
@@ -6340,17 +6340,17 @@ The way we refer to the CBVs in the **urls.py** module is a little bit different
 
 **urls.py**
 
-```
+```python
 urlpatterns = [
     url(r'^new_post/$', views.NewPostView.as_view(), name='new_post'),
 ]
 ```
 
-Here we need to use the `as_view()` class method, which returns a view function to the url patterns. In some cases, we can also feed the `as_view()` with some keyword arguments, so to customize the behavior of the CBV, just like we did with some of the authentication views to customize the templates.
+==Here we need to use the `as_view()` class method, which returns a view function to the url patterns.== In some cases, we can also feed the `as_view()` with some keyword arguments, so to customize the behavior of the CBV, just like we did with some of the authentication views to customize the templates.
 
 Anyway, the good thing about CBV is that we can add more methods, and perhaps do something like this:
 
-```
+```python
 from django.views.generic import View
 
 class NewPostView(View):
@@ -6375,7 +6375,7 @@ But that’s pretty much all you need to know about CBVs. Simple as that.
 
 ##### Generic Class-Based View
 
-Now about the GCBV. That’s a different story. As I mentioned earlier, those views are built-in CBVs for common use cases. Their implementation makes heavy usage of multiple inheritances (mixins) and other O.O. strategies.
+Now about the GCBV. That’s a different story. As I mentioned earlier, those views are built-in CBVs for common use cases. ==Their implementation makes heavy usage of multiple inheritances (mixins) and other O.O. strategies.==
 
 They are very flexible and can save many hours of work. But in the beginning, it can be difficult to work with them.
 
@@ -6385,7 +6385,7 @@ Now let’s see a GCBV example.
 
 **views.py**
 
-```
+```python
 from django.views.generic import CreateView
 
 class NewPostView(CreateView):
@@ -6401,7 +6401,7 @@ Since it’s a CBV, we refer to it in the **urls.py** the same way as any other 
 
 **urls.py**
 
-```
+```python
 urlpatterns = [
     url(r'^new_post/$', views.NewPostView.as_view(), name='new_post'),
 ]
@@ -6419,7 +6419,7 @@ Let’s get back to the implementation of our project. This time we are going to
 
 **boards/views.py** [(view complete file contents)](https://gist.github.com/vitorfs/376657085570a3dedf7e5f6e6fffc5e3#file-views-py-L66)
 
-```
+```python
 from django.shortcuts import redirect
 from django.views.generic import UpdateView
 from django.utils import timezone
@@ -6439,9 +6439,11 @@ class PostUpdateView(UpdateView):
         return redirect('topic_posts', pk=post.topic.board.pk, topic_pk=post.topic.pk)
 ```
 
-With the **UpdateView** and the **CreateView**, we have the option to either define **form_class** or the **fields** attribute. In the example above we are using the **fields** attribute to create a model form on-the-fly. Internally, Django will use a model form factory to compose a form of the **Post** model. Since it’s a very simple form with just the **message** field, we can afford to work like this. But for complex form definitions, it’s better to define a model form externally and refer to it here.
+With the **UpdateView** and the **CreateView**, we have the option to either define **form_class** or the **fields** attribute. ==In the example above we are using the **fields** attribute to create a model form on-the-fly. Internally, Django will use a model form factory to compose a form of the **Post** model.==
 
-The **pk_url_kwarg** will be used to identify the name of the keyword argument used to retrieve the **Post** object. It’s the same as we define in the **urls.py**.
+Since it’s a very simple form with just the **message** field, we can afford to work like this. But for complex form definitions, it’s better to define a model form externally and refer to it here.
+
+==The **pk_url_kwarg** will be used to identify the name of the keyword argument used to retrieve the **Post** object.== It’s the same as we define in the **urls.py**.
 
 If we don’t set the **context_object_name** attribute, the **Post** object will be available in the template as “object.” So, here we are using the **context_object_name** to rename it to **post** instead. You will see how we are using it in the template below.
 
@@ -6449,7 +6451,7 @@ In this particular example, we had to override the **form_valid()** method so as
 
 **myproject/urls.py** [(view complete file contents)](https://gist.github.com/vitorfs/376657085570a3dedf7e5f6e6fffc5e3#file-urls-py-L40)
 
-```
+```python
 from django.conf.urls import url
 from boards import views
 
@@ -6464,7 +6466,7 @@ Now we can add the link to the edit page:
 
 **templates/topic_posts.html** [(view complete file contents)](https://gist.github.com/vitorfs/589d31af9d06c5b21ec9b1623be0c357#file-topic_posts-html-L40)
 
-```
+```html
 {% if post.created_by == user %}
   <div class="mt-3">
     <a href="{% url 'edit_post' post.topic.board.pk post.topic.pk post.pk %}"
@@ -6476,7 +6478,7 @@ Now we can add the link to the edit page:
 
 **templates/edit_post.html** [(view complete file contents)](https://gist.github.com/vitorfs/376657085570a3dedf7e5f6e6fffc5e3#file-edit_post-html)
 
-```
+```html
 {% extends 'base.html' %}
 
 {% block title %}Edit post{% endblock %}
@@ -6508,7 +6510,7 @@ Create a new test file named **test_view_edit_post.py** inside the **boards/test
 
 **boards/tests/test_view_edit_post.py** [(view complete file contents)](https://gist.github.com/vitorfs/286917ce31687732eba4e545fc3cbdea)
 
-```
+```python
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -6607,7 +6609,7 @@ First, let’s fix the problem with the `@login_required` decorator. The way we 
 
 **boards/views.py** [(view complete file contents)](https://gist.github.com/vitorfs/826a6d421ebbeb80a0aee8e1b9b70398#file-views-py-L67)
 
-```
+```python
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.views.generic import UpdateView
@@ -6631,7 +6633,7 @@ class PostUpdateView(UpdateView):
         return redirect('topic_posts', pk=post.topic.board.pk, topic_pk=post.topic.pk)
 ```
 
-We can’t decorate the class directly with the `@login_required` decorator. We have to use the utility `@method_decorator`, and pass a decorator (or a list of decorators) and tell which method should be decorated. In class-based views it’s common to decorate the **dispatch** method. It’s an internal method Django use (defined inside the View class). All requests pass through this method, so it’s safe to decorate it.
+We can’t decorate the class directly with the `@login_required` decorator. ==We have to use the utility `@method_decorator`, and pass a decorator (or a list of decorators) and tell which method should be decorated. In class-based views it’s common to decorate the **dispatch** method.== It’s an internal method Django use (defined inside the View class). All requests pass through this method, so it’s safe to decorate it.
 
 Run the tests:
 
@@ -6659,7 +6661,7 @@ The easiest way to solve this problem is by overriding the `get_queryset` method
 
 **boards/views.py** [(view complete file contents)](https://gist.github.com/vitorfs/667d8439ecf05e58f14fcc74672e48da)
 
-```
+```python
 @method_decorator(login_required, name='dispatch')
 class PostUpdateView(UpdateView):
     model = Post
@@ -6680,7 +6682,7 @@ class PostUpdateView(UpdateView):
         return redirect('topic_posts', pk=post.topic.board.pk, topic_pk=post.topic.pk)
 ```
 
-With the line `queryset = super().get_queryset()` we are reusing the `get_queryset` method from the parent class, that is, the **UpateView** class. Then, we are adding an extra filter to the queryset, which is filtering the post using the logged in user, available inside the **request** object.
+==With the line `queryset = super().get_queryset()` we are reusing the `get_queryset` method from the parent class, that is, the **UpateView** class==. Then, we are adding an extra filter to the queryset, which is filtering the post using the logged in user, available inside the **request** object.
 
 Test it again:
 
@@ -6702,11 +6704,11 @@ All good!
 
 #### List View
 
-We could refactor some of our existing views to take advantage of the CBV capabilities. Take the home page for example. We are just grabbing all the boards from the database and listing it in the HTML:
+==We could refactor some of our existing views to take advantage of the CBV capabilities==. Take the home page for example. We are just grabbing all the boards from the database and listing it in the HTML:
 
 **boards/views.py**
 
-```
+```python
 from django.shortcuts import render
 from .models import Board
 
@@ -6719,7 +6721,7 @@ Here is how we could rewrite it using a GCBV for models listing:
 
 **boards/views.py** [(view complete file contents)](https://gist.github.com/vitorfs/5e248d9a4499e2a796c6ffee9cbb1125#file-views-py-L12)
 
-```
+```python
 from django.views.generic import ListView
 from .models import Board
 
@@ -6733,7 +6735,7 @@ Then we have to change the reference in the **urls.py** module:
 
 **myproject/urls.py** [(view complete file contents)](https://gist.github.com/vitorfs/a0a826233d95a4cc53a75afc441db1e9#file-urls-py-L10)
 
-```
+```python
 from django.conf.urls import url
 from boards import views
 
@@ -6747,7 +6749,7 @@ If we check the homepage we will see that nothing really changed, everything is 
 
 **boards/tests/test_view_home.py** [(view complete file contents)](https://gist.github.com/vitorfs/e17216ce3d92110cf7e005ce3288c587)
 
-```
+```python
 from django.test import TestCase
 from django.urls import resolve
 from ..views import BoardListView
@@ -6761,7 +6763,7 @@ class HomeTests(TestCase):
 
 ##### Pagination
 
-We can very easily implement pagination with class-based views. But first I wanted to do a pagination by hand, so that we can explore better the mechanics behind it, so it doesn’t look like magic.
+==We can very easily implement pagination with class-based views. But first I wanted to do a pagination by hand, so that we can explore better the mechanics behind it, so it doesn’t look like magic.==
 
 It wouldn’t really make sense to paginate the boards listing view because we do not expect to have many boards. But definitely the topics listing and the posts listing need some pagination.
 
@@ -6806,9 +6808,9 @@ Topic.objects.filter(board__name='Django').count()
 queryset = Topic.objects.filter(board__name='Django').order_by('-last_updated')
 ```
 
-It’s very important always define an ordering to a **QuerySet** you are going to paginate! Otherwise, it can give you inconsistent results.
+==It’s very important always define an ordering to a **QuerySet** you are going to paginate!== Otherwise, it can give you inconsistent results.
 
-Now let’s import the **Paginator** utility:
+==Now let’s import the **Paginator** utility:==
 
 ```
 from django.core.paginator import Paginator
@@ -6890,11 +6892,11 @@ EmptyPage: That page number is less than 1
 
 ##### FBV Pagination
 
-Here is how we do it using regular function-based views:
+==Here is how we do it using regular function-based views:==
 
 **boards/views.py** [(view complete file contents)](https://gist.github.com/vitorfs/16f0ac257439245fa6645af259d8846f#file-views-py-L19)
 
-```
+```python
 from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import get_object_or_404, render
@@ -6927,7 +6929,7 @@ Right after the topics HTML table, we can render the pagination component:
 
 **templates/topics.html** [(view complete file contents)](https://gist.github.com/vitorfs/3101a1bd72125aeb45829659a5532bc6)
 
-```
+```html
 {% if topics.has_other_pages %}
   <nav aria-label="Topics pagination" class="mb-4">
     <ul class="pagination">
@@ -6974,11 +6976,11 @@ Right after the topics HTML table, we can render the pagination component:
 
 ##### GCBV Pagination
 
-Below, the same implementation but this time using the **ListView**.
+==Below, the same implementation but this time using the **ListView**.==
 
 **boards/views.py** [(view complete file contents)](https://gist.github.com/vitorfs/323173bc56dec48fd83caf983d459421#file-views-py-L19)
 
-```
+```python
 class TopicListView(ListView):
     model = Topic
     context_object_name = 'topics'
@@ -7005,7 +7007,7 @@ Remember to update the **urls.py**:
 
 **myproject/urls.py** [(view complete file contents)](https://gist.github.com/vitorfs/61f5345b7cf8b006b2901a61b8f8e348#file-urls-py-L37)
 
-```
+```python
 from django.conf.urls import url
 from boards import views
 
@@ -7019,7 +7021,7 @@ Now let’s fix the template:
 
 **templates/topics.html** [(view complete file contents)](https://gist.github.com/vitorfs/65095aa3eda78bafd22d5e2f94086d40#file-topics-html-L40)
 
-```
+```html
 {% block content %}
   <div class="mb-4">
     <a href="{% url 'new_topic' board.pk %}" class="btn btn-primary">New topic</a>
@@ -7077,7 +7079,7 @@ Now take the time to run the tests and fix if needed.
 
 **boards/tests/test_view_board_topics.py**
 
-```
+```python
 from django.test import TestCase
 from django.urls import resolve
 from ..views import TopicListView
@@ -7093,11 +7095,11 @@ class BoardTopicsTests(TestCase):
 
 Just like we did with the **form.html** partial template, we can also create something similar for the pagination HTML snippet.
 
-Let’s paginate the topic posts page, and then find a way to reuse the pagination component.
+Let’s paginate the topic posts page, and then find a way to ==reuse the pagination component.==
 
 **boards/views.py** [(view complete file contents)](https://gist.github.com/vitorfs/53139ca0fd7c01b8459c2ff62828f963)
 
-```
+```python
 class PostListView(ListView):
     model = Post
     context_object_name = 'posts'
@@ -7118,7 +7120,7 @@ class PostListView(ListView):
 
 Now update the **urls.py** [(view complete file contents)](https://gist.github.com/vitorfs/428d58dbb61f9c2601bb7434150ea37f)
 
-```
+```python
 from django.conf.urls import url
 from boards import views
 
@@ -7149,7 +7151,7 @@ myproject/
 
 **templates/includes/pagination.html**
 
-```
+```html
 {% if is_paginated %}
   <nav aria-label="Topics pagination" class="mb-4">
     <ul class="pagination">
@@ -7196,7 +7198,7 @@ Now in the **topic_posts.html** template we use it:
 
 **templates/topic_posts.html** [(view complete file contents)](https://gist.github.com/vitorfs/df5b16bb16c1134ba4e03218dce250d7)
 
-```
+```html
 {% block content %}
 
   <div class="mb-4">
@@ -7248,7 +7250,7 @@ We can also update the previous template, the **topics.html** template to use th
 
 **templates/topics.html** [(view complete file contents)](https://gist.github.com/vitorfs/9198ad8f91cd889f315ade7e4eb62710#file-topics-html-L40)
 
-```
+```html
 {% block content %}
   <div class="mb-4">
     <a href="{% url 'new_topic' board.pk %}" class="btn btn-primary">New topic</a>
@@ -7271,7 +7273,7 @@ Update the test cases:
 
 **boards/tests/test_view_topic_posts.py**
 
-```
+```python
 from django.test import TestCase
 from django.urls import resolve
 from ..views import PostListView
@@ -7291,7 +7293,7 @@ Okay, so, this is going to be our last view. After that, we will be working on i
 
 **accounts/views.py** [(view complete file contents)](https://gist.github.com/vitorfs/ea62417b7a450050f2feeeb69b775996)
 
-```
+```python
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
@@ -7311,7 +7313,7 @@ class UserUpdateView(UpdateView):
 
 **myproject/urls.py** [(view complete file contents)](https://gist.github.com/vitorfs/27d87452e7584cb8c489625f507ed7aa#file-urls-py-L32)
 
-```
+```python
 from django.conf.urls import url
 from accounts import views as accounts_views
 
@@ -7323,7 +7325,7 @@ urlpatterns = [
 
 **templates/my_account.html**
 
-```
+```html
 {% extends 'base.html' %}
 
 {% block title %}My account{% endblock %}
@@ -7351,7 +7353,7 @@ urlpatterns = [
 
 #### Adding Markdown
 
-Let’s improve the user experience by adding Markdown to our text areas. You will see it’s very easy and simple.
+Let’s improve the user experience by ==adding Markdown== to our text areas. You will see it’s very easy and simple.
 
 First, let’s install a library called **Python-Markdown**:
 
@@ -7363,7 +7365,7 @@ We can add a new method to the **Post** model:
 
 **boards/models.py** [(view complete file contents)](https://gist.github.com/vitorfs/caa24fcf2b66903617ebbb41337d3d3d#file-models-py-L46)
 
-```
+```python
 from django.db import models
 from django.utils.html import mark_safe
 from markdown import markdown
@@ -7410,7 +7412,7 @@ Now edit the **base.html** to make space for extra JavaScripts:
 
 **templates/base.html** [(view complete file contents)](https://gist.github.com/vitorfs/5a7ad8e7eae88d64f62fec82d037b168#file-base-html-L57)
 
-```
+```html
     <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
     <script src="{% static 'js/popper.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
@@ -7421,7 +7423,7 @@ First edit the **reply_topic.html** template:
 
 **templates/reply_topic.html** [(view complete file contents)](https://gist.github.com/vitorfs/fb63bb7530690d62787c3ed8b7e15241)
 
-```
+```html
 {% extends 'base.html' %}
 
 {% load static %}
@@ -7448,7 +7450,7 @@ Now do the same thing with the **edit_post.html** template:
 
 **templates/edit_post.html** [(view complete file contents)](https://gist.github.com/vitorfs/ee9d8c91888b0bc60013b8f037bae7bb)
 
-```
+```html
 {% extends 'base.html' %}
 
 {% load static %}
@@ -7477,11 +7479,11 @@ I just thought it would be a nice touch to add the built-in **humanize** package
 
 For example, we can use it to display date and time fields more naturally. Instead of showing the whole date, we can simply show: “2 minutes ago”.
 
-Let’s do it. First, add the `django.contrib.humanize` to the `INSTALLED_APPS`.
+==Let’s do it. First, add the `django.contrib.humanize` to the `INSTALLED_APPS`.==
 
 **myproject/settings.py**
 
-```
+```python
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -7502,7 +7504,7 @@ Now we can use it in the templates. First, let’s edit the **topics.html** temp
 
 **templates/topics.html** [(view complete file contents)](https://gist.github.com/vitorfs/45521a289677a1a406b4fb743e8141ee)
 
-```
+```html
 {% extends 'base.html' %}
 
 {% load humanize %}
@@ -7516,7 +7518,7 @@ Now we can use it in the templates. First, let’s edit the **topics.html** temp
 {% endblock %}
 ```
 
-All we have to do is to load the template tags using `{% load humanize %}` and then apply the template filter: `{{ topic.last_updated|naturaltime }}`
+==All we have to do is to load the template tags using `{% load humanize %}` and then apply the template filter: `{{ topic.last_updated|naturaltime }}`==
 
 ![Humanize](https://simpleisbetterthancomplex.com/media/series/beginners-guide/1.11/part-6/humanize.png)
 
@@ -7560,7 +7562,7 @@ Great, now we can load it in our template, just like we did with the Humanize te
 
 **templates/topic_posts.html** [(view complete file contents)](https://gist.github.com/vitorfs/23d5c5bc9e6c7ac94506a2660a61012c)
 
-```
+```html
 {% extends 'base.html' %}
 
 {% load gravatar %}
@@ -7586,7 +7588,7 @@ Let’s fix it:
 
 **boards/views.py**
 
-```
+```python
 @login_required
 def reply_topic(request, pk, topic_pk):
     topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
@@ -7611,7 +7613,7 @@ Next thing we want to do is try to control the view counting system a little bit
 
 **boards/views.py**
 
-```
+```python
 class PostListView(ListView):
     model = Post
     context_object_name = 'posts'
@@ -7639,7 +7641,7 @@ Now we could provide a better navigation in the topics listing. Currently the on
 
 **boards/models.py**
 
-```
+```python
 import math
 from django.db import models
 
@@ -7670,7 +7672,7 @@ Then in the **topics.html** template we could implement something like this:
 
 **templates/topics.html**
 
-```
+```html
   <table class="table table-striped mb-4">
     <thead class="thead-inverse">
       <tr>
@@ -7717,7 +7719,7 @@ In the reply page, we are currently listing all topic replies. We could limit it
 
 **boards/models.py**
 
-```
+```python
 class Topic(models.Model):
     # ...
 
@@ -7727,7 +7729,7 @@ class Topic(models.Model):
 
 **templates/reply_topic.html**
 
-```
+```html
 {% block content %}
 
   <form method="post" class="mb-4" novalidate>
@@ -7753,7 +7755,7 @@ We can add an id to the post card:
 
 **templates/topic_posts.html**
 
-```
+```html
 {% block content %}
 
   <div class="mb-4">
@@ -7777,7 +7779,7 @@ Then we can play with it like this in the views:
 
 **boards/views.py**
 
-```
+```python
 @login_required
 def reply_topic(request, pk, topic_pk):
     topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
@@ -7811,7 +7813,7 @@ With this, it will required us to update the following test case:
 
 **boards/tests/test_view_reply_topic.py**
 
-```
+```python
 class SuccessfulReplyTopicTests(ReplyTopicTestCase):
     # ...
 
@@ -7832,7 +7834,7 @@ The easiest way is to tweak the **pagination.html** template:
 
 **templates/includes/pagination.html**
 
-```
+```html
 {% if is_paginated %}
   <nav aria-label="Topics pagination" class="mb-4">
     <ul class="pagination">
@@ -8154,6 +8156,7 @@ Example of a **.env** file for our local machine:
 SECRET_KEY=rqr_cjv4igscyu8&&(0ce(=sy=f2)p=f_wn&@0xsp7m$@!kp=d
 DEBUG=True
 ALLOWED_HOSTS=.localhost,127.0.0.1
+DATABASE_URL=sqlite:////full/path/to/your/database/file.sqlite
 ```
 
 Notice that in the `DEBUG` configuration we have a default, so in production we can ignore this configuration because it will be set to `False` automatically, as it is supposed to be.
@@ -8168,7 +8171,7 @@ This particular configuration makes sure your application is only served to this
 
 It’s a good practice to keep track of the project’s dependencies, so to be easier to install it on another machine.
 
-We can check the currently installed Python libraries by running the command:
+==We can check the currently installed Python libraries by running the command:== 
 
 ```
 pip freeze
