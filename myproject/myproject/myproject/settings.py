@@ -72,9 +72,10 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            # 'libraries':{
-            #     'my_customer_tags': 'boards.templates.form_tags',
-            # },
+            'libraries':{ # 这里是添加自定义标签的地方
+                 'my_customer_tags': 'boards.templatetags.form_tags',
+                 'my_customer_icons': 'boards.templatetags.gravatar',
+             },
         },
     },
 ]
