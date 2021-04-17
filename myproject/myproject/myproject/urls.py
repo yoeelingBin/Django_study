@@ -72,8 +72,8 @@ urlpatterns = [
     # url(r'^about/author/erica$', views.about_erica, name='about_erica'),
     # url(r'^privacy/$', views.privacy_policy, name='privacy_policy'),
 
-    # new_post
-    url(r'^new_post/$', views.new_post, name='new_post'),
+    # update_post
+    url(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/posts/(?P<post_pk>\d+)/edit/$', views.PostUpdateView.as_view(), name='edit_post'),
 
     url(r'^admin/', admin.site.urls),
 ]
