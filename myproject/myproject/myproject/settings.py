@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config, Csv
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +23,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '93zmk)4ix9n0+^%7a5*^8@!dg!kb&q(@=*&*u)6_q)^o+^ybal'
+# SECRET_KEY = '93zmk)4ix9n0+^%7a5*^8@!dg!kb&q(@=*&*u)6_q)^o+^ybal'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# # environment variables
+# SECRET_KEY = os.environ['SECRET_KEY']
 
-ALLOWED_HOSTS = []
+# # or local files
+# with open('/etc/secret_key.txt') as f:
+#     SECRET_KEY = f.read().strip()
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+DATABASES = {
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
+}
+
+
+# # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = True
+
+# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -38,6 +56,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django.contrib.humanize',
 
     'widget_tweaks',
     'boards.templatetags',
@@ -70,9 +90,10 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            # 'libraries':{
-            #     'my_customer_tags': 'boards.templates.form_tags',
-            # },
+            'libraries':{ # 这里是添加自定义标签的地方
+                 'my_customer_tags': 'boards.templatetags.form_tags',
+                 'my_customer_icons': 'boards.templatetags.gravatar',
+             },
         },
     },
 ]
@@ -83,12 +104,12 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation

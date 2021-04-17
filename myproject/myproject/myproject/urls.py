@@ -62,9 +62,11 @@ urlpatterns = [
             template_name='password_change_done.html'),
         name='password_change_done'),
 
+    url(r'^settings/account/$',accounts_views.UserUpdateView.as_view(), name='my_account') ,   
+
     url(r'^boards/(?P<pk>\d+)/$', views.TopicListView.as_view(), name='board_topics'),
     url(r'^boards/(?P<pk>\d+)/new/$', views.new_topic, name='new_topic'),
-    url(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/$', views.topic_posts, name='topic_posts'),
+    url(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/$', views.PostListView.as_view(), name='topic_posts'),
     url(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/reply/$', views.reply_topic, name='reply_topic'),
     # url(r'^about/company/$', views.about_company, name='about_company'),
     # url(r'^about/author/$', views.about_author, name='about_author'),
