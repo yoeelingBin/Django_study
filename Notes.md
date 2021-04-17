@@ -8171,7 +8171,7 @@ This particular configuration makes sure your application is only served to this
 
 It’s a good practice to keep track of the project’s dependencies, so to be easier to install it on another machine.
 
-==We can check the currently installed Python libraries by running the command:==
+==We can check the currently installed Python libraries by running the command:== 
 
 ```
 pip freeze
