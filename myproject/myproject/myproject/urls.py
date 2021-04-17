@@ -72,5 +72,8 @@ urlpatterns = [
     # url(r'^about/author/erica$', views.about_erica, name='about_erica'),
     # url(r'^privacy/$', views.privacy_policy, name='privacy_policy'),
 
+    # new_post
+    url(r'^new_post/$', views.new_post, name='new_post'),
+
     url(r'^admin/', admin.site.urls),
 ]
