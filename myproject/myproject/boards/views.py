@@ -12,14 +12,15 @@ def home(request):
     boards = Board.objects.all()
     return render(request, 'home.html', {'boards': boards})
 
-
-# def about(request):
-#     return render(request, 'about.html')
-
-
-# def about_company(request):
-#     return render(request, 'about_company.html',
-#                   {'company_name': 'Simple Complex'})
+def new_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('post_list')
+    else:
+        form = PostForm()
+    return render(request, 'new_post.html', {'form': form})
 
 
 def board_topics(request, pk):
