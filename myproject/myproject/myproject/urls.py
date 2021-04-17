@@ -23,7 +23,7 @@ from accounts import views as accounts_views
 
 urlpatterns = [
     # 格式 : url(regex正则表达式, view视图函数, kwargs=None传入参数, name=None url的名字)
-    url(r'^$', views.home, name='home'),
+    url(r'^$', views.BoardListView.as_view(), name='home'),
     # url(r'^about/$', views.about, name='about'),
     # url(r'^(?P<username>[\w.@+-]+/$', views.user_profile, name='user_profile'),
     url(r'^signup/$', accounts_views.signup, name='signup'),
